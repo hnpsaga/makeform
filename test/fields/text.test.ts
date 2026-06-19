@@ -20,4 +20,3 @@ test('preserves description', () => {
   expect(field.type).toBe('text');
   expect(field.description).toBe('Enter your name');
 });
-

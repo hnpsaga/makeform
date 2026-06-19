@@ -13,10 +13,12 @@
 ### Task 1: Type Definitions
 
 **Files:**
+
 - Create: `src/types/field.ts`
 
 - [ ] **Step 1: Write type definitions**
-  Create the file `src/types/field.ts` containing:
+      Create the file `src/types/field.ts` containing:
+
   ```typescript
   export interface BaseField<TValue> {
     readonly type: string;
@@ -51,11 +53,11 @@
   ```
 
 - [ ] **Step 2: Verify typecheck passes**
-  Run: `npm run typecheck`
-  Expected: PASS
+      Run: `npm run typecheck`
+      Expected: PASS
 
 - [ ] **Step 3: Commit**
-  Run:
+      Run:
   ```bash
   git add src/types/field.ts
   git commit -m "feat: add schema field type definitions"
@@ -66,10 +68,12 @@
 ### Task 2: Schema Definition
 
 **Files:**
+
 - Create: `src/schema/schema.ts`
 
 - [ ] **Step 1: Write Schema definition**
-  Create the file `src/schema/schema.ts` containing:
+      Create the file `src/schema/schema.ts` containing:
+
   ```typescript
   import type { FormField } from '../types/field.js';
 
@@ -77,11 +81,11 @@
   ```
 
 - [ ] **Step 2: Verify typecheck passes**
-  Run: `npm run typecheck`
-  Expected: PASS
+      Run: `npm run typecheck`
+      Expected: PASS
 
 - [ ] **Step 3: Commit**
-  Run:
+      Run:
   ```bash
   git add src/schema/schema.ts
   git commit -m "feat: add Schema type definition"
@@ -92,11 +96,13 @@
 ### Task 3: Text Field Factory
 
 **Files:**
+
 - Create: `src/fields/text.ts`
 - Create: `test/fields/text.test.ts`
 
 - [ ] **Step 1: Write failing test**
-  Create the file `test/fields/text.test.ts` containing:
+      Create the file `test/fields/text.test.ts` containing:
+
   ```typescript
   import { expect, test } from 'vitest';
   import { textField } from '../../src/fields/text.js';
@@ -117,11 +123,12 @@
   ```
 
 - [ ] **Step 2: Run test to verify it fails**
-  Run: `npx vitest run test/fields/text.test.ts`
-  Expected: FAIL (Cannot find module)
+      Run: `npx vitest run test/fields/text.test.ts`
+      Expected: FAIL (Cannot find module)
 
 - [ ] **Step 3: Implement minimal factory**
-  Create the file `src/fields/text.ts` containing:
+      Create the file `src/fields/text.ts` containing:
+
   ```typescript
   import type { TextField } from '../types/field.js';
 
@@ -140,11 +147,11 @@
   ```
 
 - [ ] **Step 4: Run test to verify it passes**
-  Run: `npx vitest run test/fields/text.test.ts`
-  Expected: PASS
+      Run: `npx vitest run test/fields/text.test.ts`
+      Expected: PASS
 
 - [ ] **Step 5: Commit**
-  Run:
+      Run:
   ```bash
   git add src/fields/text.ts test/fields/text.test.ts
   git commit -m "feat: implement textField factory and tests"
@@ -155,11 +162,13 @@
 ### Task 4: Number Field Factory
 
 **Files:**
+
 - Create: `src/fields/number.ts`
 - Create: `test/fields/number.test.ts`
 
 - [ ] **Step 1: Write failing test**
-  Create the file `test/fields/number.test.ts` containing:
+      Create the file `test/fields/number.test.ts` containing:
+
   ```typescript
   import { expect, test } from 'vitest';
   import { numberField } from '../../src/fields/number.js';
@@ -180,11 +189,12 @@
   ```
 
 - [ ] **Step 2: Run test to verify it fails**
-  Run: `npx vitest run test/fields/number.test.ts`
-  Expected: FAIL (Cannot find module)
+      Run: `npx vitest run test/fields/number.test.ts`
+      Expected: FAIL (Cannot find module)
 
 - [ ] **Step 3: Implement minimal factory**
-  Create the file `src/fields/number.ts` containing:
+      Create the file `src/fields/number.ts` containing:
+
   ```typescript
   import type { NumberField } from '../types/field.js';
 
@@ -203,11 +213,11 @@
   ```
 
 - [ ] **Step 4: Run test to verify it passes**
-  Run: `npx vitest run test/fields/number.test.ts`
-  Expected: PASS
+      Run: `npx vitest run test/fields/number.test.ts`
+      Expected: PASS
 
 - [ ] **Step 5: Commit**
-  Run:
+      Run:
   ```bash
   git add src/fields/number.ts test/fields/number.test.ts
   git commit -m "feat: implement numberField factory and tests"
@@ -218,11 +228,13 @@
 ### Task 5: Checkbox Field Factory
 
 **Files:**
+
 - Create: `src/fields/checkbox.ts`
 - Create: `test/fields/checkbox.test.ts`
 
 - [ ] **Step 1: Write failing test**
-  Create the file `test/fields/checkbox.test.ts` containing:
+      Create the file `test/fields/checkbox.test.ts` containing:
+
   ```typescript
   import { expect, test } from 'vitest';
   import { checkboxField } from '../../src/fields/checkbox.js';
@@ -243,11 +255,12 @@
   ```
 
 - [ ] **Step 2: Run test to verify it fails**
-  Run: `npx vitest run test/fields/checkbox.test.ts`
-  Expected: FAIL (Cannot find module)
+      Run: `npx vitest run test/fields/checkbox.test.ts`
+      Expected: FAIL (Cannot find module)
 
 - [ ] **Step 3: Implement minimal factory**
-  Create the file `src/fields/checkbox.ts` containing:
+      Create the file `src/fields/checkbox.ts` containing:
+
   ```typescript
   import type { CheckboxField } from '../types/field.js';
 
@@ -266,11 +279,11 @@
   ```
 
 - [ ] **Step 4: Run test to verify it passes**
-  Run: `npx vitest run test/fields/checkbox.test.ts`
-  Expected: PASS
+      Run: `npx vitest run test/fields/checkbox.test.ts`
+      Expected: PASS
 
 - [ ] **Step 5: Commit**
-  Run:
+      Run:
   ```bash
   git add src/fields/checkbox.ts test/fields/checkbox.test.ts
   git commit -m "feat: implement checkboxField factory and tests"
@@ -281,11 +294,13 @@
 ### Task 6: Select Field Factory
 
 **Files:**
+
 - Create: `src/fields/select.ts`
 - Create: `test/fields/select.test.ts`
 
 - [ ] **Step 1: Write failing test**
-  Create the file `test/fields/select.test.ts` containing:
+      Create the file `test/fields/select.test.ts` containing:
+
   ```typescript
   import { expect, test } from 'vitest';
   import { selectField } from '../../src/fields/select.js';
@@ -320,11 +335,12 @@
   ```
 
 - [ ] **Step 2: Run test to verify it fails**
-  Run: `npx vitest run test/fields/select.test.ts`
-  Expected: FAIL (Cannot find module)
+      Run: `npx vitest run test/fields/select.test.ts`
+      Expected: FAIL (Cannot find module)
 
 - [ ] **Step 3: Implement minimal factory**
-  Create the file `src/fields/select.ts` containing:
+      Create the file `src/fields/select.ts` containing:
+
   ```typescript
   import type { SelectField, SelectOption } from '../types/field.js';
 
@@ -344,11 +360,11 @@
   ```
 
 - [ ] **Step 4: Run test to verify it passes**
-  Run: `npx vitest run test/fields/select.test.ts`
-  Expected: PASS
+      Run: `npx vitest run test/fields/select.test.ts`
+      Expected: PASS
 
 - [ ] **Step 5: Commit**
-  Run:
+      Run:
   ```bash
   git add src/fields/select.ts test/fields/select.test.ts
   git commit -m "feat: implement selectField factory and tests"
@@ -359,12 +375,14 @@
 ### Task 7: Re-exports & Entrypoints
 
 **Files:**
+
 - Modify: `src/fields/index.ts`
 - Modify: `src/schema/index.ts`
 - Modify: `src/types/index.ts`
 
 - [ ] **Step 1: Update src/fields/index.ts**
-  Replace contents of `src/fields/index.ts` with:
+      Replace contents of `src/fields/index.ts` with:
+
   ```typescript
   export { textField, type TextFieldConfig } from './text.js';
   export { numberField, type NumberFieldConfig } from './number.js';
@@ -373,13 +391,15 @@
   ```
 
 - [ ] **Step 2: Update src/schema/index.ts**
-  Replace contents of `src/schema/index.ts` with:
+      Replace contents of `src/schema/index.ts` with:
+
   ```typescript
   export { type Schema } from './schema.js';
   ```
 
 - [ ] **Step 3: Update src/types/index.ts**
-  Replace contents of `src/types/index.ts` with:
+      Replace contents of `src/types/index.ts` with:
+
   ```typescript
   export type {
     BaseField,
@@ -393,11 +413,11 @@
   ```
 
 - [ ] **Step 4: Verify typecheck passes**
-  Run: `npm run typecheck`
-  Expected: PASS
+      Run: `npm run typecheck`
+      Expected: PASS
 
 - [ ] **Step 5: Commit**
-  Run:
+      Run:
   ```bash
   git add src/fields/index.ts src/schema/index.ts src/types/index.ts
   git commit -m "feat: update project re-exports"
@@ -408,18 +428,15 @@
 ### Task 8: Schema Integration and Composition Verification
 
 **Files:**
+
 - Create: `test/schema.test.ts`
 
 - [ ] **Step 1: Write integration test**
-  Create the file `test/schema.test.ts` containing:
+      Create the file `test/schema.test.ts` containing:
+
   ```typescript
   import { expect, test } from 'vitest';
-  import {
-    textField,
-    numberField,
-    checkboxField,
-    selectField,
-  } from '../src/index.js';
+  import { textField, numberField, checkboxField, selectField } from '../src/index.js';
   import type { Schema } from '../src/index.js';
 
   test('schemas can be composed and typechecked', () => {
@@ -444,15 +461,15 @@
   ```
 
 - [ ] **Step 2: Run all tests**
-  Run: `npm run test`
-  Expected: PASS
+      Run: `npm run test`
+      Expected: PASS
 
 - [ ] **Step 3: Run full verification build**
-  Run: `npm run lint && npm run typecheck && npm run build`
-  Expected: PASS
+      Run: `npm run lint && npm run typecheck && npm run build`
+      Expected: PASS
 
 - [ ] **Step 4: Commit**
-  Run:
+      Run:
   ```bash
   git add test/schema.test.ts
   git commit -m "test: add integration test for schema composition"

@@ -1,10 +1,5 @@
 import { expect, test } from 'vitest';
-import {
-  textField,
-  numberField,
-  checkboxField,
-  selectField,
-} from '../src/index.js';
+import { textField, numberField, checkboxField, selectField } from '../src/index.js';
 import type { Schema } from '../src/index.js';
 
 test('schemas can be composed and typechecked', () => {

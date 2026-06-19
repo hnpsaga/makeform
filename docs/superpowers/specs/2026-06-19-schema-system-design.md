@@ -62,6 +62,7 @@ export type Schema = Record<string, FormField>;
 Factory functions generate the typed field objects. They accept an optional configuration (with the exception of `selectField`, which requires `options`).
 
 ### Text Field (`src/fields/text.ts`)
+
 ```typescript
 import type { TextField } from '../types/field.js';
 
@@ -80,6 +81,7 @@ export function textField(config: TextFieldConfig = {}): TextField {
 ```
 
 ### Number Field (`src/fields/number.ts`)
+
 ```typescript
 import type { NumberField } from '../types/field.js';
 
@@ -98,6 +100,7 @@ export function numberField(config: NumberFieldConfig = {}): NumberField {
 ```
 
 ### Checkbox Field (`src/fields/checkbox.ts`)
+
 ```typescript
 import type { CheckboxField } from '../types/field.js';
 
@@ -116,6 +119,7 @@ export function checkboxField(config: CheckboxFieldConfig = {}): CheckboxField {
 ```
 
 ### Select Field (`src/fields/select.ts`)
+
 ```typescript
 import type { SelectField, SelectOption } from '../types/field.js';
 
@@ -167,6 +171,7 @@ export type {
 ## 5. Verification Plan
 
 Unit tests in `test/fields.test.ts` (or equivalent) will assert:
+
 - `textField`: Creates field object correctly, preserving label and default value.
 - `numberField`: Creates field object correctly, preserving metadata.
 - `checkboxField`: Creates field object correctly, preserving boolean default value.
