@@ -218,4 +218,91 @@ describe('createForm values and getters', () => {
     const errorsRefAfterSet3 = lastState!.errors;
     expect(errorsRefAfterSet3).toBe(errorsRefAfterValidate);
   });
+
+  it('returns current state synchronously with getState()', () => {
+    const schema = {
+      name: textField({ defaultValue: 'Alice' }),
+      age: numberField({ defaultValue: 25 }),
+    };
+    const form = createForm(schema);
+
+    // Initial check
+    expect(form.getState()).toEqual({
+      values: { name: 'Alice', age: 25 },
+      errors: {},
+      touched: { name: false, age: false },
+      dirty: { name: false, age: false },
+    });
+
+    // Update state
+    form.setValue('name', 'Bob');
+    expect(form.getState().values.name).toBe('Bob');
+    expect(form.getState().touched.name).toBe(true);
+    expect(form.getState().dirty.name).toBe(true);
+
+    // Validate state
+    form.validate();
+    expect(form.getState().errors).toEqual({});
+  });
+
+  it('verifies getState() returns a stable reference unless mutated', () => {
+    const schema = {
+      name: textField({ defaultValue: 'Alice', validators: [required()] }),
+      age: numberField({ defaultValue: 25 }),
+    };
+    const form = createForm(schema);
+
+    // 1. Two calls to getState() return the exact same reference
+    const state1 = form.getState();
+    const state2 = form.getState();
+    expect(state1).toBe(state2);
+
+    // 2. Modifying a value results in a new state reference
+    form.setValue('name', 'Bob');
+    const state3 = form.getState();
+    expect(state3).not.toBe(state1);
+
+    // Two calls after modification still return the same reference
+    const state4 = form.getState();
+    expect(state3).toBe(state4);
+
+    // 3. Validation that modifies errors results in a new state reference
+    // Trigger validation error
+    form.setValue('name', '');
+    const statePreValidate = form.getState();
+    form.validate();
+    const statePostValidate = form.getState();
+    expect(statePostValidate).not.toBe(statePreValidate);
+    expect(statePostValidate.errors.name).toBeDefined();
+
+    // Two calls after validation still return the same reference
+    expect(form.getState()).toBe(statePostValidate);
+
+    // 4. Calling reset results in a new state reference
+    form.reset();
+    const statePostReset = form.getState();
+    expect(statePostReset).not.toBe(statePostValidate);
+    expect(form.getState()).toBe(statePostReset);
+  });
+
+  it('protects getState() snapshots from external mutation', () => {
+    const schema = {
+      name: textField({ defaultValue: 'Alice', validators: [required()] }),
+    };
+    const form = createForm(schema);
+
+    form.setValue('name', '');
+    form.validate();
+    const state = form.getState();
+
+    expect(() => {
+      state.values.name = 'Mallory';
+    }).toThrow(TypeError);
+    expect(() => {
+      state.errors.name!.push('Injected error');
+    }).toThrow(TypeError);
+
+    expect(form.getValue('name')).toBe('');
+    expect(form.getState().errors.name).toEqual(['Field is required']);
+  });
 });
