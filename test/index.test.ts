@@ -1,6 +1,7 @@
 import { expect, test } from 'vitest';
-import { version } from '../src/index';
+import * as makeform from '../src/index.js';
 
-test('library version is defined', () => {
-  expect(version).toBe('0.0.1');
+test('exports version and core features', () => {
+  expect(makeform.version).toBe('0.0.1');
+  expect(makeform.createForm).toBeTypeOf('function');
 });

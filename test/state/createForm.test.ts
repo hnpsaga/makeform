@@ -177,4 +177,39 @@ describe('createForm values and getters', () => {
     expect(result2.errors.name).toBeUndefined();
     expect(notifyCount).toBe(3);
   });
+
+  it('verifies errors reference stability', () => {
+    const schema = {
+      name: textField({ validators: [required()] }),
+      age: numberField(),
+    };
+    const form = createForm(schema);
+
+    let lastState: FormState<{ name: string; age: number }> | null = null;
+    form.subscribe((s) => {
+      lastState = s;
+    });
+
+    // Trigger initial notify by set value
+    form.setValue('age', 10);
+    const errorsRefAfterSet1 = lastState!.errors;
+
+    // 1. When setValue is called, errors reference remains unchanged
+    form.setValue('age', 20);
+    const errorsRefAfterSet2 = lastState!.errors;
+    expect(errorsRefAfterSet2).toBe(errorsRefAfterSet1);
+
+    // Run validation to get initial error state
+    form.validate(); // triggers notify because errors changed (name is required)
+    const errorsRefAfterValidate = lastState!.errors;
+    expect(errorsRefAfterValidate).not.toBe(errorsRefAfterSet2);
+
+    // 2. When validate is run and no errors change, the reference of errors remains unchanged
+    form.validate(); // should not notify because errors are still the same
+    
+    // Trigger notification to inspect the errors reference
+    form.setValue('age', 30);
+    const errorsRefAfterSet3 = lastState!.errors;
+    expect(errorsRefAfterSet3).toBe(errorsRefAfterValidate);
+  });
 });

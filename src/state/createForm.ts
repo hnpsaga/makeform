@@ -27,6 +27,7 @@ function errorsChanged(a: Record<string, string[]>, b: Record<string, string[]>)
   const keysB = Object.keys(b);
   if (keysA.length !== keysB.length) return true;
   for (const key of keysA) {
+    if (!(key in b)) return true;
     const errA = a[key] || [];
     const errB = b[key] || [];
     if (errA.length !== errB.length) return true;
@@ -65,10 +66,10 @@ export function createForm<TSchema extends Record<string, any>>(
 
   const notify = () => {
     listeners.forEach(l => l({
-      values: { ...state.values },
-      errors: { ...state.errors },
-      touched: { ...state.touched },
-      dirty: { ...state.dirty },
+      values: state.values,
+      errors: state.errors,
+      touched: state.touched,
+      dirty: state.dirty,
     }));
   };
 
@@ -89,9 +90,9 @@ export function createForm<TSchema extends Record<string, any>>(
       const nextDirty = value !== initialValues[field];
 
       if (prevVal !== nextVal || prevTouched !== nextTouched || prevDirty !== nextDirty) {
-        state.values[field] = nextVal;
-        state.touched[field] = nextTouched;
-        state.dirty[field] = nextDirty;
+        state.values = { ...state.values, [field]: nextVal };
+        state.touched = { ...state.touched, [field]: nextTouched };
+        state.dirty = { ...state.dirty, [field]: nextDirty };
 
         notify();
       }
