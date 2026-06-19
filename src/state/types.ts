@@ -10,6 +10,7 @@ export interface FormState<TValues> {
 
 export type Listener<TValues> = (state: FormState<TValues>) => void;
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export interface FormInstance<TSchema extends Record<string, any>> {
   getValues(): InferValues<TSchema>;
   getValue<K extends keyof InferValues<TSchema>>(field: K): InferValues<TSchema>[K];

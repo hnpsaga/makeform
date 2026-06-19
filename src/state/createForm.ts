@@ -80,7 +80,18 @@ export function createForm<TSchema extends Record<string, any>>(
       return { valid: true, errors: {} };
     },
     reset() {
-      // Task 5
+      state.values = { ...initialValues };
+      state.errors = {};
+      for (const key of Object.keys(schema) as (keyof TValues & string)[]) {
+        state.touched[key] = false;
+        state.dirty[key] = false;
+      }
+      listeners.forEach(l => l({
+        values: { ...state.values },
+        errors: { ...state.errors },
+        touched: { ...state.touched },
+        dirty: { ...state.dirty },
+      }));
     },
     subscribe(listener) {
       listeners.add(listener);

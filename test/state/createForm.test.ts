@@ -25,7 +25,7 @@ describe('createForm values and getters', () => {
   });
 
   it('resolves select field default and fallback values correctly', () => {
-    const selectFieldLocal = (config?: any) => ({
+    const selectFieldLocal = (config?: Record<string, unknown>) => ({
       type: 'select' as const,
       ...config,
     });
@@ -124,5 +124,23 @@ describe('createForm values and getters', () => {
     form.unsubscribe(listener);
     form.setValue('name', 'George');
     expect(states2).toHaveLength(1); // Still 1
+  });
+
+  it('resets form values, errors, touched, and dirty states and notifies subscribers', () => {
+    const schema = { name: textField({ defaultValue: 'Alice' }) };
+    const form = createForm(schema);
+
+    form.setValue('name', 'Bob');
+    expect(form.getValues().name).toBe('Bob');
+
+    let notified = false;
+    form.subscribe(() => {
+      notified = true;
+    });
+
+    form.reset();
+
+    expect(form.getValues().name).toBe('Alice');
+    expect(notified).toBe(true);
   });
 });
