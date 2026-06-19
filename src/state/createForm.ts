@@ -82,12 +82,14 @@ export function createForm<TSchema extends Record<string, any>>(
     reset() {
       // Task 5
     },
-    subscribe(_listener) {
-      // Task 4
-      return () => {};
+    subscribe(listener) {
+      listeners.add(listener);
+      return () => {
+        listeners.delete(listener);
+      };
     },
-    unsubscribe(_listener) {
-      // Task 4
+    unsubscribe(listener) {
+      listeners.delete(listener);
     },
   };
 }

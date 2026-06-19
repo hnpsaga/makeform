@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { createForm } from '../../src/state/createForm.js';
+import type { FormState } from '../../src/state/types.js';
 import { textField, numberField, checkboxField, selectField } from '../../src/index.js';
 
 describe('createForm values and getters', () => {
@@ -86,5 +87,42 @@ describe('createForm values and getters', () => {
     };
     const form = createForm(schema);
     expect(form.getValue('role')).toBe('admin');
+  });
+
+  it('supports subscription, notifications on state changes, and unsubscription', () => {
+    const schema = { name: textField() };
+    const form = createForm(schema);
+
+    const states: FormState<{ name: string }>[] = [];
+    const unsubscribe = form.subscribe((state) => {
+      states.push(state);
+    });
+
+    // Set a new value -> notifies
+    form.setValue('name', 'Dan');
+    expect(states).toHaveLength(1);
+    expect(states[0]!.values.name).toBe('Dan');
+    expect(states[0]!.touched.name).toBe(true);
+    expect(states[0]!.dirty.name).toBe(true);
+
+    // Set same value -> no notification
+    form.setValue('name', 'Dan');
+    expect(states).toHaveLength(1);
+
+    // Unsubscribe via callback
+    unsubscribe();
+    form.setValue('name', 'Eric');
+    expect(states).toHaveLength(1); // Still 1
+
+    // Unsubscribe via explicit method
+    const states2: FormState<{ name: string }>[] = [];
+    const listener = (state: FormState<{ name: string }>) => states2.push(state);
+    form.subscribe(listener);
+    form.setValue('name', 'Frank');
+    expect(states2).toHaveLength(1);
+
+    form.unsubscribe(listener);
+    form.setValue('name', 'George');
+    expect(states2).toHaveLength(1); // Still 1
   });
 });

@@ -15,11 +15,13 @@
 Define the core state interfaces and instance method signatures.
 
 **Files:**
+
 - Create: `src/state/types.ts`
 - Test: `test/state/types.test-d.ts`
 
 - [ ] **Step 1: Write type safety check**
-  Write a type-level test file `test/state/types.test-d.ts` to assert structure matches expectations.
+      Write a type-level test file `test/state/types.test-d.ts` to assert structure matches expectations.
+
   ```ts
   import { expectTypeOf, test } from 'vitest';
   import type { FormState, FormInstance } from '../../src/state/types.js';
@@ -45,11 +47,12 @@ Define the core state interfaces and instance method signatures.
   ```
 
 - [ ] **Step 2: Run typecheck to verify it fails**
-  Run: `npm run typecheck`
-  Expected: FAIL (Cannot find module '../../src/state/types.js' or exports)
+      Run: `npm run typecheck`
+      Expected: FAIL (Cannot find module '../../src/state/types.js' or exports)
 
 - [ ] **Step 3: Write type definitions**
-  Create `src/state/types.ts`:
+      Create `src/state/types.ts`:
+
   ```ts
   import type { ValidationResult } from '../validation/types.js';
   import type { InferValues } from '../types/inference.js';
@@ -66,10 +69,7 @@ Define the core state interfaces and instance method signatures.
   export interface FormInstance<TSchema extends Record<string, any>> {
     getValues(): InferValues<TSchema>;
     getValue<K extends keyof InferValues<TSchema>>(field: K): InferValues<TSchema>[K];
-    setValue<K extends keyof InferValues<TSchema>>(
-      field: K,
-      value: InferValues<TSchema>[K]
-    ): void;
+    setValue<K extends keyof InferValues<TSchema>>(field: K, value: InferValues<TSchema>[K]): void;
     validate(): ValidationResult;
     reset(): void;
     subscribe(listener: Listener<InferValues<TSchema>>): () => void;
@@ -78,8 +78,8 @@ Define the core state interfaces and instance method signatures.
   ```
 
 - [ ] **Step 4: Run typecheck to verify it passes**
-  Run: `npm run typecheck`
-  Expected: PASS
+      Run: `npm run typecheck`
+      Expected: PASS
 
 - [ ] **Step 5: Commit**
   ```bash
@@ -94,11 +94,13 @@ Define the core state interfaces and instance method signatures.
 Initialize state based on schema defaults and implement value retrieval methods.
 
 **Files:**
+
 - Create: `src/state/createForm.ts`
 - Test: `test/state/createForm.test.ts`
 
 - [ ] **Step 1: Write test for initialization and value retrieval**
-  Create `test/state/createForm.test.ts`:
+      Create `test/state/createForm.test.ts`:
+
   ```ts
   import { describe, expect, it } from 'vitest';
   import { createForm } from '../../src/state/createForm.js';
@@ -128,11 +130,12 @@ Initialize state based on schema defaults and implement value retrieval methods.
   ```
 
 - [ ] **Step 2: Run tests to verify it fails**
-  Run: `npm run test -- test/state/createForm.test.ts`
-  Expected: FAIL (createForm is not defined)
+      Run: `npm run test -- test/state/createForm.test.ts`
+      Expected: FAIL (createForm is not defined)
 
 - [ ] **Step 3: Implement createForm and getters**
-  Create `src/state/createForm.ts`:
+      Create `src/state/createForm.ts`:
+
   ```ts
   import type { FormInstance, FormState, Listener } from './types.js';
   import type { InferValues } from '../types/inference.js';
@@ -156,7 +159,7 @@ Initialize state based on schema defaults and implement value retrieval methods.
   }
 
   export function createForm<TSchema extends Record<string, any>>(
-    schema: TSchema
+    schema: TSchema,
   ): FormInstance<TSchema> {
     type TValues = InferValues<TSchema>;
 
@@ -209,8 +212,8 @@ Initialize state based on schema defaults and implement value retrieval methods.
   ```
 
 - [ ] **Step 4: Run tests to verify it passes**
-  Run: `npm run test -- test/state/createForm.test.ts`
-  Expected: PASS
+      Run: `npm run test -- test/state/createForm.test.ts`
+      Expected: PASS
 
 - [ ] **Step 5: Commit**
   ```bash
@@ -225,11 +228,13 @@ Initialize state based on schema defaults and implement value retrieval methods.
 Implement value setters that update touched/dirty status and notify subscribers when changed.
 
 **Files:**
+
 - Modify: `src/state/createForm.ts`
 - Test: `test/state/createForm.test.ts`
 
 - [ ] **Step 1: Write test for setValue, touched, and dirty tracking**
-  Add tests inside `test/state/createForm.test.ts`:
+      Add tests inside `test/state/createForm.test.ts`:
+
   ```ts
   it('updates values and tracks touched and dirty states on setValue', () => {
     const schema = {
@@ -255,11 +260,12 @@ Implement value setters that update touched/dirty status and notify subscribers 
   ```
 
 - [ ] **Step 2: Run tests to verify they fail/type check**
-  Run: `npm run test -- test/state/createForm.test.ts`
-  Expected: FAIL on Charlie value since setValue does nothing right now.
+      Run: `npm run test -- test/state/createForm.test.ts`
+      Expected: FAIL on Charlie value since setValue does nothing right now.
 
 - [ ] **Step 3: Implement setValue, touched, and dirty logic**
-  Modify `src/state/createForm.ts`:
+      Modify `src/state/createForm.ts`:
+
   ```ts
   // In createForm return object:
   setValue(field, value) {
@@ -275,7 +281,7 @@ Implement value setters that update touched/dirty status and notify subscribers 
       state.values[field] = nextVal;
       state.touched[field] = nextTouched;
       state.dirty[field] = nextDirty;
-      
+
       // Notify (to be implemented in Task 4)
       listeners.forEach(l => l({
         values: { ...state.values },
@@ -288,8 +294,8 @@ Implement value setters that update touched/dirty status and notify subscribers 
   ```
 
 - [ ] **Step 4: Run tests to verify it passes**
-  Run: `npm run test -- test/state/createForm.test.ts`
-  Expected: PASS
+      Run: `npm run test -- test/state/createForm.test.ts`
+      Expected: PASS
 
 - [ ] **Step 5: Commit**
   ```bash
@@ -304,11 +310,13 @@ Implement value setters that update touched/dirty status and notify subscribers 
 Implement form subscription and unsubscription mechanisms with copy-safe state emissions and guard notifications.
 
 **Files:**
+
 - Modify: `src/state/createForm.ts`
 - Test: `test/state/createForm.test.ts`
 
 - [ ] **Step 1: Write test for subscriptions and unsubscription**
-  Add tests inside `test/state/createForm.test.ts`:
+      Add tests inside `test/state/createForm.test.ts`:
+
   ```ts
   it('supports subscription, notifications on state changes, and unsubscription', () => {
     const schema = { name: textField() };
@@ -349,11 +357,12 @@ Implement form subscription and unsubscription mechanisms with copy-safe state e
   ```
 
 - [ ] **Step 2: Run tests to verify they fail**
-  Run: `npm run test -- test/state/createForm.test.ts`
-  Expected: FAIL on subscriber assertions.
+      Run: `npm run test -- test/state/createForm.test.ts`
+      Expected: FAIL on subscriber assertions.
 
 - [ ] **Step 3: Implement subscription methods**
-  Modify `src/state/createForm.ts`:
+      Modify `src/state/createForm.ts`:
+
   ```ts
   // In return object:
   subscribe(listener) {
@@ -368,8 +377,8 @@ Implement form subscription and unsubscription mechanisms with copy-safe state e
   ```
 
 - [ ] **Step 4: Run tests to verify they pass**
-  Run: `npm run test -- test/state/createForm.test.ts`
-  Expected: PASS
+      Run: `npm run test -- test/state/createForm.test.ts`
+      Expected: PASS
 
 - [ ] **Step 5: Commit**
   ```bash
@@ -384,11 +393,13 @@ Implement form subscription and unsubscription mechanisms with copy-safe state e
 Implement the `reset()` API that restores all initial defaults and notifications.
 
 **Files:**
+
 - Modify: `src/state/createForm.ts`
 - Test: `test/state/createForm.test.ts`
 
 - [ ] **Step 1: Write test for resetting state**
-  Add tests inside `test/state/createForm.test.ts`:
+      Add tests inside `test/state/createForm.test.ts`:
+
   ```ts
   it('resets form values, errors, touched, and dirty states and notifies subscribers', () => {
     const schema = { name: textField({ defaultValue: 'Alice' }) };
@@ -410,11 +421,12 @@ Implement the `reset()` API that restores all initial defaults and notifications
   ```
 
 - [ ] **Step 2: Run tests to verify they fail**
-  Run: `npm run test -- test/state/createForm.test.ts`
-  Expected: FAIL on reset values validation.
+      Run: `npm run test -- test/state/createForm.test.ts`
+      Expected: FAIL on reset values validation.
 
 - [ ] **Step 3: Implement reset**
-  Modify `src/state/createForm.ts`:
+      Modify `src/state/createForm.ts`:
+
   ```ts
   // In return object:
   reset() {
@@ -434,8 +446,8 @@ Implement the `reset()` API that restores all initial defaults and notifications
   ```
 
 - [ ] **Step 4: Run tests to verify they pass**
-  Run: `npm run test -- test/state/createForm.test.ts`
-  Expected: PASS
+      Run: `npm run test -- test/state/createForm.test.ts`
+      Expected: PASS
 
 - [ ] **Step 5: Commit**
   ```bash
@@ -450,11 +462,13 @@ Implement the `reset()` API that restores all initial defaults and notifications
 Integrate the existing `validateForm` engine. Update error state and only notify subscribers if the validation errors change.
 
 **Files:**
+
 - Modify: `src/state/createForm.ts`
 - Test: `test/state/createForm.test.ts`
 
 - [ ] **Step 1: Write validation integration tests**
-  Add tests inside `test/state/createForm.test.ts`:
+      Add tests inside `test/state/createForm.test.ts`:
+
   ```ts
   import { required } from '../../src/validation/validators.js';
 
@@ -489,11 +503,12 @@ Integrate the existing `validateForm` engine. Update error state and only notify
   ```
 
 - [ ] **Step 2: Run tests to verify they fail**
-  Run: `npm run test -- test/state/createForm.test.ts`
-  Expected: FAIL on validation checks.
+      Run: `npm run test -- test/state/createForm.test.ts`
+      Expected: FAIL on validation checks.
 
 - [ ] **Step 3: Integrate validateForm and implement error comparison**
-  Modify `src/state/createForm.ts`:
+      Modify `src/state/createForm.ts`:
+
   ```ts
   import { validateForm } from '../validation/validateForm.js';
 
@@ -530,8 +545,8 @@ Integrate the existing `validateForm` engine. Update error state and only notify
   ```
 
 - [ ] **Step 4: Run tests to verify they pass**
-  Run: `npm run test -- test/state/createForm.test.ts`
-  Expected: PASS
+      Run: `npm run test -- test/state/createForm.test.ts`
+      Expected: PASS
 
 - [ ] **Step 5: Commit**
   ```bash
@@ -546,11 +561,13 @@ Integrate the existing `validateForm` engine. Update error state and only notify
 Export types and the `createForm` function from the module barrel files.
 
 **Files:**
+
 - Modify: `src/state/index.ts`
 - Modify: `src/index.ts`
 
 - [ ] **Step 1: Write test verifying library exports**
-  Modify `test/index.test.ts`:
+      Modify `test/index.test.ts`:
+
   ```ts
   import { expect, test } from 'vitest';
   import * as makeform from '../src/index.js';
@@ -562,20 +579,22 @@ Export types and the `createForm` function from the module barrel files.
   ```
 
 - [ ] **Step 2: Run tests to verify it fails**
-  Run: `npm run test -- test/index.test.ts`
-  Expected: FAIL (createForm is not exported)
+      Run: `npm run test -- test/index.test.ts`
+      Expected: FAIL (createForm is not exported)
 
 - [ ] **Step 3: Modify export index files**
-  Modify `src/state/index.ts`:
+      Modify `src/state/index.ts`:
+
   ```ts
   export { createForm } from './createForm.js';
   export * from './types.js';
   ```
+
   And check `src/index.ts` has `export * from './state/index.js';` (it already does).
 
 - [ ] **Step 4: Run all tests to verify everything passes**
-  Run: `npm run test`
-  Expected: PASS (all tests pass)
+      Run: `npm run test`
+      Expected: PASS (all tests pass)
 
 - [ ] **Step 5: Commit**
   ```bash
@@ -590,10 +609,12 @@ Export types and the `createForm` function from the module barrel files.
 Add edge case typecheck assertions for createForm type inference.
 
 **Files:**
+
 - Create: `test/state/typecheck.test-d.ts`
 
 - [ ] **Step 1: Add type tests**
-  Create `test/state/typecheck.test-d.ts`:
+      Create `test/state/typecheck.test-d.ts`:
+
   ```ts
   import { expectTypeOf, test } from 'vitest';
   import { createForm, textField, numberField } from '../../src/index.js';
@@ -619,8 +640,8 @@ Add edge case typecheck assertions for createForm type inference.
   ```
 
 - [ ] **Step 2: Run typecheck**
-  Run: `npm run typecheck`
-  Expected: PASS
+      Run: `npm run typecheck`
+      Expected: PASS
 
 - [ ] **Step 3: Commit**
   ```bash
@@ -635,14 +656,15 @@ Add edge case typecheck assertions for createForm type inference.
 Update the README to include the Form State Engine documentation.
 
 **Files:**
+
 - Modify: `README.md`
 
 - [ ] **Step 1: Update documentation**
-  Modify `README.md` to add the "Form State" section before/after the Validation section. Show clear code examples of `createForm`, `getValues`, `getValue`, `setValue`, `validate`, `reset`, and `subscribe`.
+      Modify `README.md` to add the "Form State" section before/after the Validation section. Show clear code examples of `createForm`, `getValues`, `getValue`, `setValue`, `validate`, `reset`, and `subscribe`.
 
 - [ ] **Step 2: Build verification**
-  Run: `npm run build`
-  Expected: PASS
+      Run: `npm run build`
+      Expected: PASS
 
 - [ ] **Step 3: Commit**
   ```bash
