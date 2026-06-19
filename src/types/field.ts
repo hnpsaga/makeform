@@ -1,8 +1,11 @@
+import type { Validator } from '../validation/types.js';
+
 export interface BaseField<TValue> {
   readonly type: string;
   readonly label?: string;
   readonly description?: string;
   readonly defaultValue?: TValue;
+  readonly validators?: Validator<TValue>[];
 }
 
 export interface TextField extends BaseField<string> {
