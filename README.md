@@ -270,3 +270,75 @@ const unsubscribe = form.subscribe((state) => {
 // Call the returned function to unsubscribe
 unsubscribe();
 ```
+
+## React Adapter
+
+MakeForm provides a thin React integration layer on top of the core form engine.
+All state management, validation, and type inference flows through the existing `createForm()` engine.
+
+### useForm
+
+Creates and manages a form instance for the lifetime of the component.
+
+```tsx
+import { useForm, textField, numberField } from '@hnpsaga/makeform';
+
+const schema = {
+  name: textField({ validators: [required()] }),
+  age: numberField(),
+};
+
+function ExampleForm() {
+  const form = useForm(schema);
+
+  return <button onClick={() => form.validate()}>Validate</button>;
+}
+```
+
+### useField
+
+Subscribes a component to a specific field's state. Only re-renders when that
+field's `value`, `errors`, `touched`, or `dirty` state changes — not on unrelated
+field updates.
+
+```tsx
+import { useForm, useField, textField, numberField } from '@hnpsaga/makeform';
+
+const schema = {
+  name: textField(),
+  age: numberField(),
+};
+
+function ExampleForm() {
+  const form = useForm(schema);
+  const name = useField(form, 'name');
+
+  return (
+    <div>
+      <input value={name.value} onChange={(e) => name.setValue(e.target.value)} />
+      {name.errors.map((error) => (
+        <div key={error}>{error}</div>
+      ))}
+    </div>
+  );
+}
+```
+
+**`useField` returns:**
+| Property | Type | Description |
+|---|---|---|
+| `value` | `TValue` | Current field value, typed from schema |
+| `errors` | `string[]` | Current validation error messages |
+| `touched` | `boolean` | Whether the field has been interacted with |
+| `dirty` | `boolean` | Whether the value differs from its initial value |
+| `setValue` | `(value: TValue) => void` | Update the field value |
+
+### Requirements
+
+React Adapter requires React 18 or later as a peer dependency:
+
+```json
+"peerDependencies": {
+  "react": "^18.0.0 || ^19.0.0"
+}
+```
