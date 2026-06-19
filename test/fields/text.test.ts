@@ -14,3 +14,10 @@ test('preserves label and default value', () => {
   expect(field.label).toBe('Name');
   expect(field.defaultValue).toBe('John');
 });
+
+test('preserves description', () => {
+  const field = textField({ description: 'Enter your name' });
+  expect(field.type).toBe('text');
+  expect(field.description).toBe('Enter your name');
+});
+

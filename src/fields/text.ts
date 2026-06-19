@@ -1,10 +1,6 @@
 import type { TextField } from '../types/field.js';
 
-export interface TextFieldConfig {
-  label?: string;
-  description?: string;
-  defaultValue?: string;
-}
+export type TextFieldConfig = Partial<Omit<TextField, 'type'>>;
 
 export function textField(config: TextFieldConfig = {}): TextField {
   return {
