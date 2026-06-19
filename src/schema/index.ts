@@ -1,3 +1,1 @@
-export interface FormSchema {
-  fields: Record<string, unknown>;
-}
+export { type Schema } from './schema.js';
