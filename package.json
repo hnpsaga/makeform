@@ -4,11 +4,11 @@
   "description": "Lightweight schema-driven form library for React with strong TypeScript type inference.",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/hnpsaga/@saga/makeform.git"
+    "url": "git+https://github.com/hnpsaga/makeform.git"
   },
-  "homepage": "https://github.com/hnpsaga/@saga/makeform",
+  "homepage": "https://github.com/hnpsaga/makeform#readme",
   "bugs": {
-    "url": "https://github.com/hnpsaga/@saga/makeform/issues"
+    "url": "https://github.com/hnpsaga/makeform/issues"
   },
   "license": "MIT",
   "devDependencies": {
@@ -26,5 +26,21 @@
   },
   "files": [
     "dist"
-  ]
+  ],
+  "author": "Hari Naga Praveen Saga",
+  "keywords": [
+    "react",
+    "forms",
+    "typescript",
+    "schema",
+    "validation",
+    "form-builder"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  }
 }
