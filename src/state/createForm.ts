@@ -66,7 +66,7 @@ export function createForm<TSchema extends Record<string, any>>(
   const listeners = new Set<Listener<TValues>>();
 
   const notify = () => {
-    listeners.forEach(l => l({
+    Array.from(listeners).forEach(l => l({
       values: state.values,
       errors: state.errors,
       touched: state.touched,
