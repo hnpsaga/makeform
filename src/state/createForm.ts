@@ -41,7 +41,7 @@ function errorsChanged(a: Record<string, string[]>, b: Record<string, string[]>)
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function createForm<TSchema extends Record<string, any>>(
-  schema: TSchema
+  schema: TSchema,
 ): FormInstance<TSchema> {
   type TValues = InferValues<TSchema>;
 
@@ -66,12 +66,14 @@ export function createForm<TSchema extends Record<string, any>>(
   const listeners = new Set<Listener<TValues>>();
 
   const notify = () => {
-    Array.from(listeners).forEach(l => l({
-      values: state.values,
-      errors: state.errors,
-      touched: state.touched,
-      dirty: state.dirty,
-    }));
+    Array.from(listeners).forEach((l) =>
+      l({
+        values: state.values,
+        errors: state.errors,
+        touched: state.touched,
+        dirty: state.dirty,
+      }),
+    );
   };
 
   return {
@@ -132,4 +134,3 @@ export function createForm<TSchema extends Record<string, any>>(
     },
   };
 }
-

@@ -186,6 +186,7 @@ Manage form state reactively using a framework-agnostic form controller.
 ### `createForm(schema)`
 
 Initializes the form state engine with a schema, returning a form instance. Initial values are derived from `defaultValue` on the field configs, or fall back to:
+
 - `text`: `''`
 - `number`: `0`
 - `checkbox`: `false`
@@ -269,4 +270,3 @@ const unsubscribe = form.subscribe((state) => {
 // Call the returned function to unsubscribe
 unsubscribe();
 ```
-

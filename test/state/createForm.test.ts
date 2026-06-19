@@ -34,10 +34,16 @@ describe('createForm values and getters', () => {
     const schema = {
       roleWithDefault: selectFieldLocal({
         defaultValue: 'admin',
-        options: [{ label: 'Admin', value: 'admin' }, { label: 'User', value: 'user' }],
+        options: [
+          { label: 'Admin', value: 'admin' },
+          { label: 'User', value: 'user' },
+        ],
       }),
       roleWithFirstOption: selectFieldLocal({
-        options: [{ label: 'User', value: 'user' }, { label: 'Admin', value: 'admin' }],
+        options: [
+          { label: 'User', value: 'user' },
+          { label: 'Admin', value: 'admin' },
+        ],
       }),
       roleEmptyOptions: selectFieldLocal({
         options: [],
@@ -206,7 +212,7 @@ describe('createForm values and getters', () => {
 
     // 2. When validate is run and no errors change, the reference of errors remains unchanged
     form.validate(); // should not notify because errors are still the same
-    
+
     // Trigger notification to inspect the errors reference
     form.setValue('age', 30);
     const errorsRefAfterSet3 = lastState!.errors;
