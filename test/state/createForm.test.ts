@@ -218,4 +218,31 @@ describe('createForm values and getters', () => {
     const errorsRefAfterSet3 = lastState!.errors;
     expect(errorsRefAfterSet3).toBe(errorsRefAfterValidate);
   });
+
+  it('returns current state synchronously with getState()', () => {
+    const schema = {
+      name: textField({ defaultValue: 'Alice' }),
+      age: numberField({ defaultValue: 25 }),
+    };
+    const form = createForm(schema);
+
+    // Initial check
+    expect(form.getState()).toEqual({
+      values: { name: 'Alice', age: 25 },
+      errors: {},
+      touched: { name: false, age: false },
+      dirty: { name: false, age: false },
+    });
+
+    // Update state
+    form.setValue('name', 'Bob');
+    expect(form.getState().values.name).toBe('Bob');
+    expect(form.getState().touched.name).toBe(true);
+    expect(form.getState().dirty.name).toBe(true);
+
+    // Validate state
+    form.validate();
+    expect(form.getState().errors).toEqual({});
+  });
 });
+

@@ -132,5 +132,14 @@ export function createForm<TSchema extends Record<string, any>>(
     unsubscribe(listener) {
       listeners.delete(listener);
     },
+    getState() {
+      return {
+        values: { ...state.values },
+        errors: { ...state.errors },
+        touched: { ...state.touched },
+        dirty: { ...state.dirty },
+      };
+    },
   };
 }
+

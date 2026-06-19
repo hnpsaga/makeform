@@ -19,4 +19,6 @@ export interface FormInstance<TSchema extends Record<string, any>> {
   reset(): void;
   subscribe(listener: Listener<InferValues<TSchema>>): () => void;
   unsubscribe(listener: Listener<InferValues<TSchema>>): void;
+  getState(): FormState<InferValues<TSchema>>;
 }
+
