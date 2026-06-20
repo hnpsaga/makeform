@@ -8,16 +8,28 @@ export function FormRenderer<TSchema extends Record<string, any>>({
   form,
   schema,
   renderers,
+  classNames,
 }: FormRendererProps<TSchema>) {
   const fieldNames = Object.keys(schema) as (keyof TSchema & string)[];
 
+  function mergeClasses(...classes: (string | undefined)[]): string {
+    return classes.filter(Boolean).join(' ');
+  }
+
   return (
-    <div className="mf-form" data-testid="form-renderer">
-      <div className="mf-grid">
+    <div className={mergeClasses('mf-form', classNames?.form)} data-testid="form-renderer">
+      <div className={mergeClasses('mf-grid', classNames?.grid)}>
         {fieldNames.map((name) => {
           const field = schema[name] as FormField;
           return (
-            <FieldRenderer key={name} form={form} name={name} field={field} renderers={renderers} />
+            <FieldRenderer
+              key={name}
+              form={form}
+              name={name}
+              field={field}
+              renderers={renderers}
+              classNames={classNames}
+            />
           );
         })}
       </div>

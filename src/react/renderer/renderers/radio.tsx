@@ -7,6 +7,7 @@ export function RadioRenderer<TValue extends string = string>({
   value,
   options,
   onChange,
+  className,
 }: RadioRendererProps<TValue>) {
   return (
     <div className="mf-radio-group" role="radiogroup">
@@ -15,7 +16,7 @@ export function RadioRenderer<TValue extends string = string>({
         return (
           <label key={option.value} htmlFor={optionId}>
             <input
-              className="mf-radio"
+              className={['mf-radio', className].filter(Boolean).join(' ')}
               type="radio"
               id={optionId}
               name={name}

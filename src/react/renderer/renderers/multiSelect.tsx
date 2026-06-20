@@ -7,10 +7,11 @@ export function MultiSelectRenderer<TValue extends string = string>({
   value,
   options,
   onChange,
+  className,
 }: MultiSelectRendererProps<TValue>) {
   return (
     <select
-      className="mf-select"
+      className={['mf-select', className].filter(Boolean).join(' ')}
       id={id}
       name={name}
       multiple

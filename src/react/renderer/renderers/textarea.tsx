@@ -6,10 +6,11 @@ export function TextareaRenderer({
   name,
   value,
   onChange,
+  className,
 }: PrimitiveFieldRendererProps<string>) {
   return (
     <textarea
-      className="mf-textarea"
+      className={['mf-textarea', className].filter(Boolean).join(' ')}
       id={id}
       name={name}
       value={value}

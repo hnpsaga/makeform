@@ -4,6 +4,7 @@ export * from './types.js';
 export { FormRenderer } from './renderer/FormRenderer.js';
 export { FieldRenderer } from './renderer/FieldRenderer.js';
 export type {
+  ClassNames,
   FormRendererProps,
   FieldRendererProps,
   Renderers,
