@@ -12,11 +12,13 @@ export function FormRenderer<TSchema extends Record<string, any>>({
 
   return (
     <div className="mf-form" data-testid="form-renderer">
-      {fieldNames.map((name) => {
-        const field = schema[name] as FormField;
-        if (field.type === 'custom') return null;
-        return <FieldRenderer key={name} form={form} name={name} field={field} />;
-      })}
+      <div className="mf-grid">
+        {fieldNames.map((name) => {
+          const field = schema[name] as FormField;
+          if (field.type === 'custom') return null;
+          return <FieldRenderer key={name} form={form} name={name} field={field} />;
+        })}
+      </div>
     </div>
   );
 }

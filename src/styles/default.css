@@ -1,18 +1,23 @@
 /* MakeForm Default Theme */
 
 .mf-form {
-  display: flex;
-  flex-direction: column;
-  gap: 1.25rem;
-  max-width: 32rem;
+  max-width: 64rem;
+  margin: 0 auto;
   font-family:
     -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+.mf-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.25rem;
 }
 
 .mf-field {
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
+  min-width: 0;
 }
 
 .mf-label {
