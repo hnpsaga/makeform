@@ -8,3 +8,4 @@ export { dateField, type DateFieldConfig } from './date.js';
 export { phoneField, type PhoneFieldConfig } from './phone.js';
 export { radioField, type RadioFieldConfig } from './radio.js';
 export { multiSelectField, type MultiSelectFieldConfig } from './multiSelect.js';
+export { customField, type CustomFieldConfig } from './custom.js';
