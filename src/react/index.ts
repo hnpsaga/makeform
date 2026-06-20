@@ -7,6 +7,7 @@ export type {
   FormRendererProps,
   FieldRendererProps,
   Renderers,
+  CustomFieldRendererProps,
   PrimitiveFieldRendererProps,
   CheckboxRendererProps,
   RadioRendererProps,

@@ -16,7 +16,6 @@ export function FormRenderer<TSchema extends Record<string, any>>({
       <div className="mf-grid">
         {fieldNames.map((name) => {
           const field = schema[name] as FormField;
-          if (field.type === 'custom') return null;
           return (
             <FieldRenderer key={name} form={form} name={name} field={field} renderers={renderers} />
           );

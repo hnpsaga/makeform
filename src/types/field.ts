@@ -58,6 +58,7 @@ export interface MultiSelectField<TValue extends string = string> extends BaseFi
 
 export interface CustomField<TValue = unknown> extends BaseField<TValue> {
   readonly type: 'custom';
+  readonly component?: string;
 }
 
 export type FormField =

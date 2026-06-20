@@ -1,15 +1,15 @@
 import React from 'react';
 import { useField } from '../useField.js';
 import type { FieldRendererProps } from './types.js';
-import type { RadioField, SelectField, MultiSelectField } from '../../types/field.js';
+import type { RadioField, SelectField, MultiSelectField, CustomField } from '../../types/field.js';
 import { builtInRenderers } from './registry.js';
 
 function getLabelText(fieldLabel: string | undefined, name: string): string {
   return fieldLabel ?? name;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function FieldRenderer<
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   TSchema extends Record<string, any>,
   K extends keyof TSchema & string,
 >({ form, name, field, renderers }: FieldRendererProps<TSchema, K>) {
@@ -133,6 +133,25 @@ export function FieldRenderer<
             value={fieldState.value as string[]}
             options={msField.options}
             onChange={(v) => fieldState.setValue(v as typeof fieldState.value)}
+          />
+        );
+      }
+      case 'custom': {
+        const customField = field as CustomField;
+        const componentName = customField.component;
+        if (!componentName) return null;
+        const customRenderers = renderers?.custom;
+        const CustomRenderer = customRenderers?.[componentName];
+        if (!CustomRenderer) return null;
+        return (
+          <CustomRenderer
+            id={id}
+            name={name}
+            value={fieldState.value}
+            errors={fieldState.errors}
+            touched={fieldState.touched}
+            dirty={fieldState.dirty}
+            setValue={(v) => fieldState.setValue(v)}
           />
         );
       }

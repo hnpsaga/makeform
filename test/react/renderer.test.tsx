@@ -121,7 +121,7 @@ describe('FormRenderer — basic rendering', () => {
     expect(gridEl!.children).toHaveLength(0);
   });
 
-  it('skips customField (no built-in renderer in V1)', () => {
+  it('renders customField with no component when renderers.custom is empty', () => {
     const schema = {
       name: textField({ label: 'Name' }),
       extra: customField({ label: 'Extra' }),
@@ -132,6 +132,19 @@ describe('FormRenderer — basic rendering', () => {
     }
     render(<Test />);
     expect(screen.getAllByRole('textbox')).toHaveLength(1);
+    expect(screen.getByText('Extra')).toBeTruthy();
+  });
+
+  it('renders customField without component key as label-only (no input)', () => {
+    const schema = {
+      extra: customField({ label: 'Extra' }),
+    };
+    function Test() {
+      const form = useForm(schema);
+      return <FormRenderer form={form} schema={schema} />;
+    }
+    render(<Test />);
+    expect(screen.getByText('Extra')).toBeTruthy();
   });
 
   it('wraps each field in a div with data-field attribute', () => {
@@ -837,15 +850,15 @@ describe('FormRenderer — re-render behavior', () => {
 // ─── Edge Cases ───────────────────────────────────────────────────────────────
 
 describe('FormRenderer — edge cases', () => {
-  it('handles schema with only custom fields (renders empty wrapper)', () => {
+  it('handles schema with only custom fields (renders label but no input)', () => {
     const schema = { data: customField({ label: 'Data' }) };
     function Test() {
       const form = useForm(schema);
       return <FormRenderer form={form} schema={schema} />;
     }
     render(<Test />);
-    // The wrapper renders but contains no field renderers
     expect(screen.getByTestId('form-renderer')).toBeTruthy();
+    expect(screen.getByText('Data')).toBeTruthy();
     expect(screen.queryByRole('textbox')).toBeNull();
     expect(screen.queryByRole('checkbox')).toBeNull();
   });

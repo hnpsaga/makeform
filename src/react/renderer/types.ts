@@ -40,6 +40,16 @@ export interface MultiSelectRendererProps<TValue extends string = string> {
   onChange: (value: TValue[]) => void;
 }
 
+export interface CustomFieldRendererProps<TValue> {
+  id: string;
+  name: string;
+  value: TValue;
+  errors: string[];
+  touched: boolean;
+  dirty: boolean;
+  setValue: (value: TValue) => void;
+}
+
 export type Renderers = Partial<{
   text: ComponentType<PrimitiveFieldRendererProps<string>>;
   textarea: ComponentType<PrimitiveFieldRendererProps<string>>;
@@ -51,10 +61,12 @@ export type Renderers = Partial<{
   radio: ComponentType<RadioRendererProps>;
   select: ComponentType<SelectRendererProps>;
   'multi-select': ComponentType<MultiSelectRendererProps>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  custom?: Record<string, ComponentType<CustomFieldRendererProps<any>>>;
 }>;
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export interface FieldRendererProps<
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   TSchema extends Record<string, any>,
   K extends keyof TSchema & string,
 > {
@@ -64,8 +76,10 @@ export interface FieldRendererProps<
   renderers?: Renderers;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export interface FormRendererProps<TSchema extends Record<string, any>> {
+export interface FormRendererProps<
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  TSchema extends Record<string, any>,
+> {
   form: FormInstance<TSchema>;
   schema: TSchema;
   renderers?: Renderers;

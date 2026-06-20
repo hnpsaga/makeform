@@ -566,18 +566,19 @@ function MyForm() {
 
 ### Supported Field Types
 
-| Field Builder      | HTML Control                        |
-| ------------------ | ----------------------------------- |
-| `textField`        | `<input type="text" />`             |
-| `textareaField`    | `<textarea />`                      |
-| `emailField`       | `<input type="email" />`            |
-| `phoneField`       | `<input type="tel" />`              |
-| `numberField`      | `<input type="number" />`           |
-| `dateField`        | `<input type="date" />`             |
-| `checkboxField`    | `<input type="checkbox" />`         |
-| `radioField`       | `<input type="radio" />` per option |
-| `selectField`      | `<select>`                          |
-| `multiSelectField` | `<select multiple>`                 |
+| Field Builder      | HTML Control                           |
+| ------------------ | -------------------------------------- |
+| `textField`        | `<input type="text" />`                |
+| `textareaField`    | `<textarea />`                         |
+| `emailField`       | `<input type="email" />`               |
+| `phoneField`       | `<input type="tel" />`                 |
+| `numberField`      | `<input type="number" />`              |
+| `dateField`        | `<input type="date" />`                |
+| `checkboxField`    | `<input type="checkbox" />`            |
+| `radioField`       | `<input type="radio" />` per option    |
+| `selectField`      | `<select>`                             |
+| `multiSelectField` | `<select multiple>`                    |
+| `customField`      | Custom renderer via `renderers.custom` |
 
 ### Labels, Errors, Accessibility
 
@@ -647,10 +648,104 @@ Each override receives the same props as the built-in renderer. The `Renderers` 
 />
 ```
 
-### V1 Limitations
+### Custom Field Renderers
 
-- `customField` is not rendered in V1 — fields are silently skipped.
-- No layout configuration.
+Custom field definitions can be rendered with custom renderer components via the `renderers.custom` prop:
+
+```tsx
+import { useForm, customField, FormRenderer } from '@hnpsaga/makeform';
+import type { CustomFieldRendererProps } from '@hnpsaga/makeform';
+
+function RichTextRenderer({
+  value,
+  errors,
+  touched,
+  dirty,
+  setValue,
+}: CustomFieldRendererProps<string>) {
+  return (
+    <div
+      contentEditable
+      onBlur={(e) => setValue(e.currentTarget.textContent || '')}
+      dangerouslySetInnerHTML={{ __html: value }}
+    />
+  );
+}
+
+const schema = {
+  bio: customField<string>({
+    component: 'richText',
+    label: 'Biography',
+  }),
+};
+
+function MyForm() {
+  const form = useForm(schema);
+
+  return (
+    <FormRenderer
+      form={form}
+      schema={schema}
+      renderers={{
+        custom: {
+          richText: RichTextRenderer,
+        },
+      }}
+    />
+  );
+}
+```
+
+Custom renderers receive `CustomFieldRendererProps<TValue>` which provides:
+
+| Prop       | Type                      | Description                                      |
+| ---------- | ------------------------- | ------------------------------------------------ |
+| `id`       | `string`                  | Field identifier (same as field key)             |
+| `name`     | `string`                  | Field name                                       |
+| `value`    | `TValue`                  | Current field value                              |
+| `errors`   | `string[]`                | Current validation error messages                |
+| `touched`  | `boolean`                 | Whether the field has been interacted with       |
+| `dirty`    | `boolean`                 | Whether the value differs from its initial value |
+| `setValue` | `(value: TValue) => void` | Update the field value                           |
+
+Custom fields participate in all form lifecycle features — validation, subscriptions, reset, touched/dirty tracking — automatically through the existing state engine.
+
+Multiple custom renderers can be registered side by side:
+
+```tsx
+<FormRenderer
+  form={form}
+  schema={schema}
+  renderers={{
+    custom: {
+      richText: RichTextRenderer,
+      locationPicker: LocationRenderer,
+      fileUpload: FileUploadRenderer,
+    },
+  }}
+/>
+```
+
+Built-in renderer overrides coexist alongside custom renderers:
+
+```tsx
+<FormRenderer
+  form={form}
+  schema={schema}
+  renderers={{
+    text: CustomTextRenderer,
+    custom: {
+      richText: RichTextRenderer,
+    },
+  }}
+/>
+```
+
+When a `customField` specifies a `component` name that is not registered in `renderers.custom`, the label is still rendered but no input is shown. This allows graceful fallback when a renderer has not been provided.
+
+### Layout
+
+No layout configuration.
 
 ### Responsive Layout
 

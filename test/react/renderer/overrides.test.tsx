@@ -204,7 +204,7 @@ describe('FieldRenderer — renderer overrides', () => {
 });
 
 describe('Renderer overrides — type safety', () => {
-  it('Renderers type only contains valid built-in keys', () => {
+  it('Renderers type contains built-in keys and custom', () => {
     type Keys = keyof Renderers;
     expectTypeOf<Keys>().toEqualTypeOf<
       | 'text'
@@ -217,6 +217,7 @@ describe('Renderer overrides — type safety', () => {
       | 'radio'
       | 'select'
       | 'multi-select'
+      | 'custom'
     >();
   });
 
