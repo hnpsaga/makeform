@@ -11,7 +11,7 @@ export function FormRenderer<TSchema extends Record<string, any>>({
   const fieldNames = Object.keys(schema) as (keyof TSchema & string)[];
 
   return (
-    <div data-testid="form-renderer">
+    <div className="mf-form" data-testid="form-renderer">
       {fieldNames.map((name) => {
         const field = schema[name] as FormField;
         if (field.type === 'custom') return null;

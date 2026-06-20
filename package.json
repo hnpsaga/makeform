@@ -35,7 +35,7 @@
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
-    "build": "tsup",
+    "build": "tsup && mkdir -p dist/styles && cp src/styles/default.css dist/styles/default.css",
     "test": "vitest run",
     "test:watch": "vitest",
     "lint": "eslint .",

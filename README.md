@@ -604,8 +604,20 @@ function MyForm() {
 
 ### V1 Limitations
 
-- No styling (unstyled semantic HTML only).
 - `customField` is not rendered in V1 — fields are silently skipped.
 - No layout configuration.
 - No custom renderer overrides (planned for Phase 10).
-- No theme system (planned for Phase 9).
+
+### Default Theme
+
+MakeForm ships with a default theme. Import the stylesheet in your app to apply clean, modern styling:
+
+```css
+@import '@hnpsaga/makeform/dist/styles/default.css';
+```
+
+Or in JavaScript:
+
+```js
+import '@hnpsaga/makeform/dist/styles/default.css';
+```

@@ -9,6 +9,7 @@ function toDateInputValue(date: Date): string {
 export function DateRenderer({ id, name, value, onChange }: PrimitiveFieldRendererProps<Date>) {
   return (
     <input
+      className="mf-input"
       type="date"
       id={id}
       name={name}

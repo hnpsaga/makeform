@@ -9,12 +9,13 @@ export function RadioRenderer<TValue extends string = string>({
   onChange,
 }: RadioRendererProps<TValue>) {
   return (
-    <div role="radiogroup">
+    <div className="mf-radio-group" role="radiogroup">
       {options.map((option) => {
         const optionId = `${id}-${option.value}`;
         return (
           <label key={option.value} htmlFor={optionId}>
             <input
+              className="mf-radio"
               type="radio"
               id={optionId}
               name={name}

@@ -7,5 +7,13 @@ export function TextareaRenderer({
   value,
   onChange,
 }: PrimitiveFieldRendererProps<string>) {
-  return <textarea id={id} name={name} value={value} onChange={(e) => onChange(e.target.value)} />;
+  return (
+    <textarea
+      className="mf-textarea"
+      id={id}
+      name={name}
+      value={value}
+      onChange={(e) => onChange(e.target.value)}
+    />
+  );
 }

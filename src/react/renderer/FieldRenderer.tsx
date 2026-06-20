@@ -134,13 +134,17 @@ export function FieldRenderer<
   }
 
   return (
-    <div data-field={name}>
-      <label htmlFor={id}>{labelText}</label>
+    <div className="mf-field" data-field={name}>
+      <label className="mf-label" htmlFor={id}>
+        {labelText}
+      </label>
       {renderInput()}
       {hasErrors && (
-        <div role="alert">
+        <div className="mf-error" role="alert">
           {fieldState.errors.map((error) => (
-            <span key={error}>{error}</span>
+            <span className="mf-error__text" key={error}>
+              {error}
+            </span>
           ))}
         </div>
       )}

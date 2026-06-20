@@ -10,6 +10,7 @@ export function MultiSelectRenderer<TValue extends string = string>({
 }: MultiSelectRendererProps<TValue>) {
   return (
     <select
+      className="mf-select"
       id={id}
       name={name}
       multiple
