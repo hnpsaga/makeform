@@ -1,3 +1,4 @@
+import type { ComponentType } from 'react';
 import type { FormField, SelectOption } from '../../types/field.js';
 import type { FormInstance } from '../../state/types.js';
 
@@ -39,6 +40,19 @@ export interface MultiSelectRendererProps<TValue extends string = string> {
   onChange: (value: TValue[]) => void;
 }
 
+export type Renderers = Partial<{
+  text: ComponentType<PrimitiveFieldRendererProps<string>>;
+  textarea: ComponentType<PrimitiveFieldRendererProps<string>>;
+  email: ComponentType<PrimitiveFieldRendererProps<string>>;
+  phone: ComponentType<PrimitiveFieldRendererProps<string>>;
+  number: ComponentType<PrimitiveFieldRendererProps<number>>;
+  date: ComponentType<PrimitiveFieldRendererProps<Date>>;
+  checkbox: ComponentType<CheckboxRendererProps>;
+  radio: ComponentType<RadioRendererProps>;
+  select: ComponentType<SelectRendererProps>;
+  'multi-select': ComponentType<MultiSelectRendererProps>;
+}>;
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export interface FieldRendererProps<
   TSchema extends Record<string, any>,
@@ -47,10 +61,12 @@ export interface FieldRendererProps<
   form: FormInstance<TSchema>;
   name: K;
   field: FormField;
+  renderers?: Renderers;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export interface FormRendererProps<TSchema extends Record<string, any>> {
   form: FormInstance<TSchema>;
   schema: TSchema;
+  renderers?: Renderers;
 }

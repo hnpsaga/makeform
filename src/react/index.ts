@@ -3,4 +3,13 @@ export * from './useField.js';
 export * from './types.js';
 export { FormRenderer } from './renderer/FormRenderer.js';
 export { FieldRenderer } from './renderer/FieldRenderer.js';
-export type { FormRendererProps, FieldRendererProps } from './renderer/types.js';
+export type {
+  FormRendererProps,
+  FieldRendererProps,
+  Renderers,
+  PrimitiveFieldRendererProps,
+  CheckboxRendererProps,
+  RadioRendererProps,
+  SelectRendererProps,
+  MultiSelectRendererProps,
+} from './renderer/types.js';

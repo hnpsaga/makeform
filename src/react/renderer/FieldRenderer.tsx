@@ -12,7 +12,7 @@ function getLabelText(fieldLabel: string | undefined, name: string): string {
 export function FieldRenderer<
   TSchema extends Record<string, any>,
   K extends keyof TSchema & string,
->({ form, name, field }: FieldRendererProps<TSchema, K>) {
+>({ form, name, field, renderers }: FieldRendererProps<TSchema, K>) {
   const fieldState = useField(form, name);
   const id = name;
   const labelText = getLabelText(field.label, name);
@@ -20,73 +20,88 @@ export function FieldRenderer<
 
   function renderInput() {
     switch (field.type) {
-      case 'text':
+      case 'text': {
+        const TextRenderer = renderers?.text ?? builtInRenderers.text;
         return (
-          <builtInRenderers.text
+          <TextRenderer
             id={id}
             name={name}
             value={fieldState.value as string}
             onChange={(v) => fieldState.setValue(v as typeof fieldState.value)}
           />
         );
-      case 'textarea':
+      }
+      case 'textarea': {
+        const TextareaRenderer = renderers?.textarea ?? builtInRenderers.textarea;
         return (
-          <builtInRenderers.textarea
+          <TextareaRenderer
             id={id}
             name={name}
             value={fieldState.value as string}
             onChange={(v) => fieldState.setValue(v as typeof fieldState.value)}
           />
         );
-      case 'email':
+      }
+      case 'email': {
+        const EmailRenderer = renderers?.email ?? builtInRenderers.email;
         return (
-          <builtInRenderers.email
+          <EmailRenderer
             id={id}
             name={name}
             value={fieldState.value as string}
             onChange={(v) => fieldState.setValue(v as typeof fieldState.value)}
           />
         );
-      case 'phone':
+      }
+      case 'phone': {
+        const PhoneRenderer = renderers?.phone ?? builtInRenderers.phone;
         return (
-          <builtInRenderers.phone
+          <PhoneRenderer
             id={id}
             name={name}
             value={fieldState.value as string}
             onChange={(v) => fieldState.setValue(v as typeof fieldState.value)}
           />
         );
-      case 'number':
+      }
+      case 'number': {
+        const NumberRenderer = renderers?.number ?? builtInRenderers.number;
         return (
-          <builtInRenderers.number
+          <NumberRenderer
             id={id}
             name={name}
             value={fieldState.value as number}
             onChange={(v) => fieldState.setValue(v as typeof fieldState.value)}
           />
         );
-      case 'date':
+      }
+      case 'date': {
+        const DateRenderer = renderers?.date ?? builtInRenderers.date;
         return (
-          <builtInRenderers.date
+          <DateRenderer
             id={id}
             name={name}
             value={fieldState.value as Date}
             onChange={(v) => fieldState.setValue(v as typeof fieldState.value)}
           />
         );
-      case 'checkbox':
+      }
+      case 'checkbox': {
+        const CheckboxRenderer = renderers?.checkbox ?? builtInRenderers.checkbox;
         return (
-          <builtInRenderers.checkbox
+          <CheckboxRenderer
             id={id}
             name={name}
             checked={fieldState.value as boolean}
             onChange={(v) => fieldState.setValue(v as typeof fieldState.value)}
           />
         );
+      }
       case 'radio': {
         const radioField = field as RadioField;
+        const RadioRenderer = renderers?.radio ?? builtInRenderers.radio;
         return (
-          <builtInRenderers.radio
+          <RadioRenderer
             id={id}
             name={name}
             value={fieldState.value as string}
@@ -97,8 +112,9 @@ export function FieldRenderer<
       }
       case 'select': {
         const selectField = field as SelectField;
+        const SelectRenderer = renderers?.select ?? builtInRenderers.select;
         return (
-          <builtInRenderers.select
+          <SelectRenderer
             id={id}
             name={name}
             value={fieldState.value as string}
@@ -109,7 +125,7 @@ export function FieldRenderer<
       }
       case 'multi-select': {
         const msField = field as MultiSelectField;
-        const MSRenderer = builtInRenderers['multi-select'];
+        const MSRenderer = renderers?.['multi-select'] ?? builtInRenderers['multi-select'];
         return (
           <MSRenderer
             id={id}

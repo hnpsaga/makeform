@@ -602,11 +602,55 @@ function MyForm() {
 }
 ```
 
+### Renderer Overrides
+
+Replace any built-in renderer with a custom component via the `renderers` prop:
+
+```tsx
+import { useForm, textField, emailField, FormRenderer } from '@hnpsaga/makeform';
+import type { PrimitiveFieldRendererProps } from '@hnpsaga/makeform';
+
+function CustomTextRenderer({ id, name, value, onChange }: PrimitiveFieldRendererProps<string>) {
+  return (
+    <input
+      type="text"
+      id={id}
+      name={name}
+      value={value}
+      onChange={(e) => onChange(e.target.value)}
+      style={{ border: '2px solid blue' }}
+    />
+  );
+}
+
+const schema = {
+  name: textField({ label: 'Name' }),
+  email: emailField({ label: 'Email' }),
+};
+
+function MyForm() {
+  const form = useForm(schema);
+  return <FormRenderer form={form} schema={schema} renderers={{ text: CustomTextRenderer }} />;
+}
+```
+
+Each override receives the same props as the built-in renderer. The `Renderers` type ensures only valid field type keys are accepted.
+
+`FieldRenderer` also accepts the `renderers` prop when used standalone.
+
+```tsx
+<FieldRenderer
+  form={form}
+  name="name"
+  field={schema.name}
+  renderers={{ text: CustomTextRenderer }}
+/>
+```
+
 ### V1 Limitations
 
 - `customField` is not rendered in V1 — fields are silently skipped.
 - No layout configuration.
-- No custom renderer overrides (planned for Phase 10).
 
 ### Responsive Layout
 

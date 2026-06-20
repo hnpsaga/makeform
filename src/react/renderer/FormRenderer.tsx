@@ -7,6 +7,7 @@ import { FieldRenderer } from './FieldRenderer.js';
 export function FormRenderer<TSchema extends Record<string, any>>({
   form,
   schema,
+  renderers,
 }: FormRendererProps<TSchema>) {
   const fieldNames = Object.keys(schema) as (keyof TSchema & string)[];
 
@@ -16,7 +17,9 @@ export function FormRenderer<TSchema extends Record<string, any>>({
         {fieldNames.map((name) => {
           const field = schema[name] as FormField;
           if (field.type === 'custom') return null;
-          return <FieldRenderer key={name} form={form} name={name} field={field} />;
+          return (
+            <FieldRenderer key={name} form={form} name={name} field={field} renderers={renderers} />
+          );
         })}
       </div>
     </div>
