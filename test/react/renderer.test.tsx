@@ -75,6 +75,22 @@ describe('FormRenderer — basic rendering', () => {
     expect(screen.getByTestId('form-renderer')).toBeTruthy();
   });
 
+  it('renders the mf-grid layout wrapper inside mf-form', () => {
+    const schema = {
+      firstName: textField({ label: 'First Name' }),
+      lastName: textField({ label: 'Last Name' }),
+    };
+    function Test() {
+      const form = useForm(schema);
+      return <FormRenderer form={form} schema={schema} />;
+    }
+    const { container } = render(<Test />);
+    const formEl = container.querySelector('.mf-form');
+    expect(formEl).not.toBeNull();
+    const gridEl = formEl!.querySelector('.mf-grid');
+    expect(gridEl).not.toBeNull();
+  });
+
   it('renders all fields in schema insertion order', () => {
     const schema = {
       firstName: textField({ label: 'First Name' }),
@@ -99,7 +115,10 @@ describe('FormRenderer — basic rendering', () => {
       return <FormRenderer form={form as any} schema={schema as any} />;
     }
     render(<Test />);
-    expect(screen.getByTestId('form-renderer').children).toHaveLength(0);
+    const formEl = screen.getByTestId('form-renderer');
+    const gridEl = formEl.querySelector('.mf-grid');
+    expect(gridEl).not.toBeNull();
+    expect(gridEl!.children).toHaveLength(0);
   });
 
   it('skips customField (no built-in renderer in V1)', () => {

@@ -608,6 +608,10 @@ function MyForm() {
 - No layout configuration.
 - No custom renderer overrides (planned for Phase 10).
 
+### Responsive Layout
+
+Forms include responsive layouts by default. Fields automatically arrange in a multi-column grid on desktop, reduce columns on tablet, and collapse to single-column on mobile — no configuration needed.
+
 ### Default Theme
 
 MakeForm ships with a default theme. Import the stylesheet in your app to apply clean, modern styling:

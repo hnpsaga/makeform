@@ -12,6 +12,7 @@ describe('Default Theme Stylesheet', () => {
   it('contains expected class selectors', () => {
     const css = readFileSync(cssPath, 'utf-8');
     expect(css).toContain('.mf-form');
+    expect(css).toContain('.mf-grid');
     expect(css).toContain('.mf-field');
     expect(css).toContain('.mf-label');
     expect(css).toContain('.mf-input');
@@ -26,6 +27,12 @@ describe('Default Theme Stylesheet', () => {
 
   it('has non-trivial content length', () => {
     const css = readFileSync(cssPath, 'utf-8');
-    expect(css.length).toBeGreaterThan(500);
+    expect(css.length).toBeGreaterThan(600);
+  });
+
+  it('uses CSS Grid for responsive layout', () => {
+    const css = readFileSync(cssPath, 'utf-8');
+    expect(css).toContain('display: grid');
+    expect(css).toContain('repeat(auto-fit, minmax(250px, 1fr))');
   });
 });
