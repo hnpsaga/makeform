@@ -458,6 +458,33 @@ const unsubscribe = form.subscribe((state) => {
 unsubscribe();
 ```
 
+#### `markAllTouched()`
+
+Marks every field as touched. This is useful for revealing validation errors before the user has interacted with a field (e.g., on submit).
+
+```ts
+form.markAllTouched();
+```
+
+#### `handleSubmit(callback)`
+
+Returns a submit function that:
+
+1. Marks all fields as touched.
+2. Runs validation.
+3. If validation fails, does nothing.
+4. If validation succeeds, calls the callback with the typed form values.
+
+```ts
+const submit = form.handleSubmit((values) => {
+  console.log(values);
+});
+
+submit();
+```
+
+The callback receives fully typed values inferred from the schema.
+
 ## React Adapter
 
 MakeForm provides a thin React integration layer on top of the core form engine.

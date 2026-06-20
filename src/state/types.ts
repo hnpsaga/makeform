@@ -20,4 +20,6 @@ export interface FormInstance<TSchema extends Record<string, any>> {
   subscribe(listener: Listener<InferValues<TSchema>>): () => void;
   unsubscribe(listener: Listener<InferValues<TSchema>>): void;
   getState(): FormState<InferValues<TSchema>>;
+  markAllTouched(): void;
+  handleSubmit(callback: (values: InferValues<TSchema>) => void): () => void;
 }

@@ -157,6 +157,23 @@ export function createForm<TSchema extends Record<string, any>>(
     unsubscribe(listener) {
       listeners.delete(listener);
     },
+    markAllTouched() {
+      const nextTouched = {} as Record<keyof TValues, boolean>;
+      for (const key of Object.keys(schema) as (keyof TValues & string)[]) {
+        nextTouched[key] = true;
+      }
+      state = createState<TValues>(state.values, state.errors, nextTouched, state.dirty);
+      notify();
+    },
+    handleSubmit(callback: (values: InferValues<TSchema>) => void) {
+      const submit = () => {
+        this.markAllTouched();
+        const result = this.validate();
+        if (!result.valid) return;
+        callback(this.getValues());
+      };
+      return submit;
+    },
     getState() {
       return state;
     },

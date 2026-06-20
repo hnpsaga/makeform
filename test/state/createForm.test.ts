@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi, expectTypeOf } from 'vitest';
 import { createForm } from '../../src/state/createForm.js';
 import type { FormState } from '../../src/state/types.js';
 import { textField, numberField, checkboxField, selectField } from '../../src/index.js';
@@ -283,6 +283,102 @@ describe('createForm values and getters', () => {
     const statePostReset = form.getState();
     expect(statePostReset).not.toBe(statePostValidate);
     expect(form.getState()).toBe(statePostReset);
+  });
+
+  it('marks all fields as touched with markAllTouched', () => {
+    const schema = {
+      name: textField(),
+      age: numberField(),
+    };
+    const form = createForm(schema);
+
+    expect(form.getState().touched).toEqual({ name: false, age: false });
+
+    form.markAllTouched();
+
+    expect(form.getState().touched).toEqual({ name: true, age: true });
+  });
+
+  it('handleSubmit calls the callback with typed values on valid submission', () => {
+    const schema = {
+      name: textField({ defaultValue: 'Alice' }),
+      age: numberField({ defaultValue: 25 }),
+    };
+    const form = createForm(schema);
+
+    const callback = vi.fn();
+    const submit = form.handleSubmit(callback);
+
+    submit();
+
+    expect(callback).toHaveBeenCalledTimes(1);
+    expect(callback).toHaveBeenCalledWith({ name: 'Alice', age: 25 });
+  });
+
+  it('handleSubmit does not call callback when validation fails', () => {
+    const schema = {
+      name: textField({ validators: [required()] }),
+    };
+    const form = createForm(schema);
+
+    const callback = vi.fn();
+    const submit = form.handleSubmit(callback);
+
+    submit();
+
+    expect(callback).not.toHaveBeenCalled();
+  });
+
+  it('handleSubmit marks all fields as touched before validation', () => {
+    const schema = {
+      name: textField({ validators: [required()] }),
+      age: numberField(),
+    };
+    const form = createForm(schema);
+
+    const submit = form.handleSubmit(() => {});
+
+    expect(form.getState().touched.name).toBe(false);
+    expect(form.getState().touched.age).toBe(false);
+
+    submit();
+
+    expect(form.getState().touched.name).toBe(true);
+    expect(form.getState().touched.age).toBe(true);
+  });
+
+  it('handleSubmit returns a function that can be called later', () => {
+    const schema = {
+      name: textField({ defaultValue: 'Alice' }),
+    };
+    const form = createForm(schema);
+
+    const callback = vi.fn();
+    const submit = form.handleSubmit(callback);
+
+    // Not called immediately
+    expect(callback).not.toHaveBeenCalled();
+
+    // Called when returned function is invoked
+    submit();
+    expect(callback).toHaveBeenCalledTimes(1);
+  });
+
+  it('handleSubmit callback receives correct typed values from InferValues', () => {
+    const schema = {
+      name: textField({ defaultValue: 'Alice' }),
+      age: numberField({ defaultValue: 30 }),
+      active: checkboxField({ defaultValue: true }),
+    };
+    const form = createForm(schema);
+
+    const submit = form.handleSubmit((values) => {
+      expectTypeOf(values.name).toBeString();
+      expectTypeOf(values.age).toBeNumber();
+      expectTypeOf(values.active).toBeBoolean();
+    });
+
+    submit();
   });
 
   it('protects getState() snapshots from external mutation', () => {
