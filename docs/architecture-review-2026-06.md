@@ -8,14 +8,14 @@ The goal of this review was to determine whether any architectural issues discov
 
 Review scope included:
 
-* Schema System
-* Type Inference Engine
-* Validation Engine
-* Form State Engine
-* React Adapter
-* Dynamic Form Renderer
-* Renderer Registry
-* Custom Renderer System
+- Schema System
+- Type Inference Engine
+- Validation Engine
+- Form State Engine
+- React Adapter
+- Dynamic Form Renderer
+- Renderer Registry
+- Custom Renderer System
 
 The review concluded that the overall architecture is sound and no blocking issues were identified.
 
@@ -36,10 +36,10 @@ The review identified several areas for future improvement but no findings that 
 
 The following roadmap phases may proceed without modification:
 
-* Phase 9C — Styling Override API
-* Phase 11 — Documentation
-* Phase 12 — Demo Application
-* Phase 13 — Release
+- Phase 9C — Styling Override API
+- Phase 11 — Documentation
+- Phase 12 — Demo Application
+- Phase 13 — Release
 
 ---
 
@@ -53,8 +53,8 @@ MakeForm supports custom field rendering through:
 
 ```ts
 customField<T>({
-  component: "componentName"
-})
+  component: 'componentName',
+});
 ```
 
 and:
@@ -63,8 +63,8 @@ and:
 <FormRenderer
   renderers={{
     custom: {
-      componentName: CustomRenderer
-    }
+      componentName: CustomRenderer,
+    },
   }}
 />
 ```
@@ -76,19 +76,19 @@ Internally the renderer registration system uses a string-based lookup mechanism
 The review identified that there is no compile-time linkage between:
 
 ```ts
-customField<T>()
+customField<T>();
 ```
 
 and:
 
 ```ts
-renderers.custom
+renderers.custom;
 ```
 
 The renderer registry currently accepts:
 
 ```ts
-Record<string, ComponentType<CustomFieldRendererProps<any>>>
+Record<string, ComponentType<CustomFieldRendererProps<any>>>;
 ```
 
 This means TypeScript cannot verify that a renderer registered for a specific component name expects the same value type used by the associated custom field.
@@ -97,18 +97,18 @@ This means TypeScript cannot verify that a renderer registered for a specific co
 
 The review determined:
 
-* Type inference remains fully functional.
-* InferField and InferValues continue to infer custom field value types correctly.
-* Form state remains strongly typed.
-* Validation remains strongly typed.
-* The limitation exists only at the renderer registration boundary.
+- Type inference remains fully functional.
+- InferField and InferValues continue to infer custom field value types correctly.
+- Form state remains strongly typed.
+- Validation remains strongly typed.
+- The limitation exists only at the renderer registration boundary.
 
 Example:
 
 ```ts
 customField<string>({
-  component: "richText"
-})
+  component: 'richText',
+});
 ```
 
 and:
@@ -133,15 +133,15 @@ Potential approach:
 type CustomRenderersMap = {
   richText: string;
   locationPicker: Location;
-}
+};
 ```
 
 This would require:
 
-* Generic renderer registries
-* Generic FormRenderer APIs
-* Generic FieldRenderer APIs
-* Type-level component registration
+- Generic renderer registries
+- Generic FormRenderer APIs
+- Generic FieldRenderer APIs
+- Type-level component registration
 
 ### Decision
 
@@ -153,16 +153,16 @@ No changes required.
 
 Benefits:
 
-* Simpler API
-* Lower maintenance cost
-* Easier adoption
+- Simpler API
+- Lower maintenance cost
+- Easier adoption
 
 Costs of stronger typing:
 
-* Significant increase in type complexity
-* More complex public APIs
-* Larger maintenance burden
-* Reduced developer ergonomics
+- Significant increase in type complexity
+- More complex public APIs
+- Larger maintenance burden
+- Reduced developer ergonomics
 
 The current implementation is considered an acceptable trade-off.
 
@@ -170,9 +170,9 @@ The current implementation is considered an acceptable trade-off.
 
 Revisit only if:
 
-* Large numbers of custom renderer types emerge
-* Consumers report runtime mismatch problems
-* A future major version redesigns the renderer architecture
+- Large numbers of custom renderer types emerge
+- Consumers report runtime mismatch problems
+- A future major version redesigns the renderer architecture
 
 ### Priority
 
@@ -191,13 +191,13 @@ Validation execution currently contains internal type casts around the schema an
 Examples include:
 
 ```ts
-schema as any
+schema as any;
 ```
 
 and:
 
 ```ts
-values as any
+values as any;
 ```
 
 during validation execution.
@@ -210,10 +210,10 @@ The review identified that TypeScript type information is erased at this interna
 
 The review determined:
 
-* Consumer-facing APIs remain strongly typed.
-* InferValues preserves value types correctly.
-* Validators remain typed through field definitions.
-* Form instances preserve schema typing correctly.
+- Consumer-facing APIs remain strongly typed.
+- InferValues preserves value types correctly.
+- Validators remain typed through field definitions.
+- Form instances preserve schema typing correctly.
 
 The casts exist because TypeScript cannot prove equivalence between separate generic constraints despite structural compatibility.
 
@@ -225,9 +225,9 @@ They do not leak into the public API.
 
 Possible improvements:
 
-* Shared validation utility types
-* Stronger generic constraints
-* Validation-specific schema abstractions
+- Shared validation utility types
+- Stronger generic constraints
+- Validation-specific schema abstractions
 
 ### Decision
 
@@ -239,13 +239,13 @@ No changes required.
 
 Benefits of fixing:
 
-* Slightly cleaner internal typing
+- Slightly cleaner internal typing
 
 Costs:
 
-* Increased generic complexity
-* Additional maintenance burden
-* No consumer-facing benefit
+- Increased generic complexity
+- Additional maintenance burden
+- No consumer-facing benefit
 
 The current implementation is considered acceptable.
 
@@ -253,9 +253,9 @@ The current implementation is considered acceptable.
 
 Revisit only if:
 
-* Validation engine is redesigned
-* New validation capabilities require additional typing work
-* TypeScript improvements make the casts unnecessary
+- Validation engine is redesigned
+- New validation capabilities require additional typing work
+- TypeScript improvements make the casts unnecessary
 
 ### Priority
 
@@ -271,10 +271,10 @@ The following items were identified as worthwhile future enhancements but are no
 
 Examples:
 
-* Password confirmation
-* Date range validation
-* Cross-field business rules
-* Conditional requirements
+- Password confirmation
+- Date range validation
+- Cross-field business rules
+- Conditional requirements
 
 Priority: Medium
 
@@ -290,10 +290,10 @@ Not required for v0.1.0.
 
 Examples:
 
-* Username availability
-* Email uniqueness
-* Remote validation APIs
-* Server-side business rules
+- Username availability
+- Email uniqueness
+- Remote validation APIs
+- Server-side business rules
 
 Priority: Medium
 
@@ -313,17 +313,17 @@ The following items are intentionally accepted:
 
 Accepted because:
 
-* Low risk
-* High implementation complexity
-* No consumer-facing issues
+- Low risk
+- High implementation complexity
+- No consumer-facing issues
 
 ## Validation Type Boundary Casts
 
 Accepted because:
 
-* Internal implementation detail
-* No consumer-facing type safety loss
-* Low practical risk
+- Internal implementation detail
+- No consumer-facing type safety loss
+- Low practical risk
 
 ---
 
@@ -331,23 +331,23 @@ Accepted because:
 
 Current architecture successfully provides:
 
-* Schema System
-* Type Inference
-* Validation Engine
-* Form State Engine
-* React Integration
-* Dynamic Form Rendering
-* Renderer Overrides
-* Custom Renderer Support
-* Default Theme
-* Responsive Layout
+- Schema System
+- Type Inference
+- Validation Engine
+- Form State Engine
+- React Integration
+- Dynamic Form Rendering
+- Renderer Overrides
+- Custom Renderer Support
+- Default Theme
+- Responsive Layout
 
 The architecture is considered stable enough to continue with:
 
-* Styling Override API
-* Documentation
-* Demo Application
-* Release Preparation
+- Styling Override API
+- Documentation
+- Demo Application
+- Release Preparation
 
 No redesign is required before v0.1.0.
 
