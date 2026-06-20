@@ -2,16 +2,7 @@ import React from 'react';
 import { useField } from '../useField.js';
 import type { FieldRendererProps } from './types.js';
 import type { RadioField, SelectField, MultiSelectField } from '../../types/field.js';
-import { TextRenderer } from './renderers/text.js';
-import { TextareaRenderer } from './renderers/textarea.js';
-import { EmailRenderer } from './renderers/email.js';
-import { PhoneRenderer } from './renderers/phone.js';
-import { NumberRenderer } from './renderers/number.js';
-import { DateRenderer } from './renderers/date.js';
-import { CheckboxRenderer } from './renderers/checkbox.js';
-import { RadioRenderer } from './renderers/radio.js';
-import { SelectRenderer } from './renderers/select.js';
-import { MultiSelectRenderer } from './renderers/multiSelect.js';
+import { builtInRenderers } from './registry.js';
 
 function getLabelText(fieldLabel: string | undefined, name: string): string {
   return fieldLabel ?? name;
@@ -31,7 +22,7 @@ export function FieldRenderer<
     switch (field.type) {
       case 'text':
         return (
-          <TextRenderer
+          <builtInRenderers.text
             id={id}
             name={name}
             value={fieldState.value as string}
@@ -40,7 +31,7 @@ export function FieldRenderer<
         );
       case 'textarea':
         return (
-          <TextareaRenderer
+          <builtInRenderers.textarea
             id={id}
             name={name}
             value={fieldState.value as string}
@@ -49,7 +40,7 @@ export function FieldRenderer<
         );
       case 'email':
         return (
-          <EmailRenderer
+          <builtInRenderers.email
             id={id}
             name={name}
             value={fieldState.value as string}
@@ -58,7 +49,7 @@ export function FieldRenderer<
         );
       case 'phone':
         return (
-          <PhoneRenderer
+          <builtInRenderers.phone
             id={id}
             name={name}
             value={fieldState.value as string}
@@ -67,7 +58,7 @@ export function FieldRenderer<
         );
       case 'number':
         return (
-          <NumberRenderer
+          <builtInRenderers.number
             id={id}
             name={name}
             value={fieldState.value as number}
@@ -76,7 +67,7 @@ export function FieldRenderer<
         );
       case 'date':
         return (
-          <DateRenderer
+          <builtInRenderers.date
             id={id}
             name={name}
             value={fieldState.value as Date}
@@ -85,7 +76,7 @@ export function FieldRenderer<
         );
       case 'checkbox':
         return (
-          <CheckboxRenderer
+          <builtInRenderers.checkbox
             id={id}
             name={name}
             checked={fieldState.value as boolean}
@@ -95,7 +86,7 @@ export function FieldRenderer<
       case 'radio': {
         const radioField = field as RadioField;
         return (
-          <RadioRenderer
+          <builtInRenderers.radio
             id={id}
             name={name}
             value={fieldState.value as string}
@@ -107,7 +98,7 @@ export function FieldRenderer<
       case 'select': {
         const selectField = field as SelectField;
         return (
-          <SelectRenderer
+          <builtInRenderers.select
             id={id}
             name={name}
             value={fieldState.value as string}
@@ -118,8 +109,9 @@ export function FieldRenderer<
       }
       case 'multi-select': {
         const msField = field as MultiSelectField;
+        const MSRenderer = builtInRenderers['multi-select'];
         return (
-          <MultiSelectRenderer
+          <MSRenderer
             id={id}
             name={name}
             value={fieldState.value as string[]}
