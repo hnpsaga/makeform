@@ -6,10 +6,16 @@ function toDateInputValue(date: Date): string {
   return date.toISOString().split('T')[0] ?? '';
 }
 
-export function DateRenderer({ id, name, value, onChange }: PrimitiveFieldRendererProps<Date>) {
+export function DateRenderer({
+  id,
+  name,
+  value,
+  onChange,
+  className,
+}: PrimitiveFieldRendererProps<Date>) {
   return (
     <input
-      className="mf-input"
+      className={['mf-input', className].filter(Boolean).join(' ')}
       type="date"
       id={id}
       name={name}

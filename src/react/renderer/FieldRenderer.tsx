@@ -12,11 +12,15 @@ export function FieldRenderer<
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   TSchema extends Record<string, any>,
   K extends keyof TSchema & string,
->({ form, name, field, renderers }: FieldRendererProps<TSchema, K>) {
+>({ form, name, field, renderers, classNames }: FieldRendererProps<TSchema, K>) {
   const fieldState = useField(form, name);
   const id = name;
   const labelText = getLabelText(field.label, name);
   const hasErrors = fieldState.errors.length > 0;
+
+  function mergeClasses(...classes: (string | undefined)[]): string {
+    return classes.filter(Boolean).join(' ');
+  }
 
   function renderInput() {
     switch (field.type) {
@@ -28,6 +32,7 @@ export function FieldRenderer<
             name={name}
             value={fieldState.value as string}
             onChange={(v) => fieldState.setValue(v as typeof fieldState.value)}
+            className={classNames?.input}
           />
         );
       }
@@ -39,6 +44,7 @@ export function FieldRenderer<
             name={name}
             value={fieldState.value as string}
             onChange={(v) => fieldState.setValue(v as typeof fieldState.value)}
+            className={classNames?.textarea}
           />
         );
       }
@@ -50,6 +56,7 @@ export function FieldRenderer<
             name={name}
             value={fieldState.value as string}
             onChange={(v) => fieldState.setValue(v as typeof fieldState.value)}
+            className={classNames?.input}
           />
         );
       }
@@ -61,6 +68,7 @@ export function FieldRenderer<
             name={name}
             value={fieldState.value as string}
             onChange={(v) => fieldState.setValue(v as typeof fieldState.value)}
+            className={classNames?.input}
           />
         );
       }
@@ -72,6 +80,7 @@ export function FieldRenderer<
             name={name}
             value={fieldState.value as number}
             onChange={(v) => fieldState.setValue(v as typeof fieldState.value)}
+            className={classNames?.input}
           />
         );
       }
@@ -83,6 +92,7 @@ export function FieldRenderer<
             name={name}
             value={fieldState.value as Date}
             onChange={(v) => fieldState.setValue(v as typeof fieldState.value)}
+            className={classNames?.input}
           />
         );
       }
@@ -94,6 +104,7 @@ export function FieldRenderer<
             name={name}
             checked={fieldState.value as boolean}
             onChange={(v) => fieldState.setValue(v as typeof fieldState.value)}
+            className={classNames?.checkbox}
           />
         );
       }
@@ -107,6 +118,7 @@ export function FieldRenderer<
             value={fieldState.value as string}
             options={radioField.options}
             onChange={(v) => fieldState.setValue(v as typeof fieldState.value)}
+            className={classNames?.radio}
           />
         );
       }
@@ -120,6 +132,7 @@ export function FieldRenderer<
             value={fieldState.value as string}
             options={selectField.options}
             onChange={(v) => fieldState.setValue(v as typeof fieldState.value)}
+            className={classNames?.select}
           />
         );
       }
@@ -133,6 +146,7 @@ export function FieldRenderer<
             value={fieldState.value as string[]}
             options={msField.options}
             onChange={(v) => fieldState.setValue(v as typeof fieldState.value)}
+            className={classNames?.select}
           />
         );
       }
@@ -161,13 +175,13 @@ export function FieldRenderer<
   }
 
   return (
-    <div className="mf-field" data-field={name}>
-      <label className="mf-label" htmlFor={id}>
+    <div className={mergeClasses('mf-field', classNames?.field)} data-field={name}>
+      <label className={mergeClasses('mf-label', classNames?.label)} htmlFor={id}>
         {labelText}
       </label>
       {renderInput()}
       {hasErrors && (
-        <div className="mf-error" role="alert">
+        <div className={mergeClasses('mf-error', classNames?.error)} role="alert">
           {fieldState.errors.map((error) => (
             <span className="mf-error__text" key={error}>
               {error}

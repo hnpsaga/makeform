@@ -2,11 +2,25 @@ import type { ComponentType } from 'react';
 import type { FormField, SelectOption } from '../../types/field.js';
 import type { FormInstance } from '../../state/types.js';
 
+export interface ClassNames {
+  form?: string;
+  grid?: string;
+  field?: string;
+  label?: string;
+  input?: string;
+  textarea?: string;
+  select?: string;
+  checkbox?: string;
+  radio?: string;
+  error?: string;
+}
+
 export interface PrimitiveFieldRendererProps<TValue> {
   id: string;
   name: string;
   value: TValue;
   onChange: (value: TValue) => void;
+  className?: string;
 }
 
 export interface CheckboxRendererProps {
@@ -14,6 +28,7 @@ export interface CheckboxRendererProps {
   name: string;
   checked: boolean;
   onChange: (checked: boolean) => void;
+  className?: string;
 }
 
 export interface RadioRendererProps<TValue extends string = string> {
@@ -22,6 +37,7 @@ export interface RadioRendererProps<TValue extends string = string> {
   value: TValue;
   options: readonly SelectOption<TValue>[];
   onChange: (value: TValue) => void;
+  className?: string;
 }
 
 export interface SelectRendererProps<TValue extends string = string> {
@@ -30,6 +46,7 @@ export interface SelectRendererProps<TValue extends string = string> {
   value: TValue;
   options: readonly SelectOption<TValue>[];
   onChange: (value: TValue) => void;
+  className?: string;
 }
 
 export interface MultiSelectRendererProps<TValue extends string = string> {
@@ -38,6 +55,7 @@ export interface MultiSelectRendererProps<TValue extends string = string> {
   value: readonly TValue[];
   options: readonly SelectOption<TValue>[];
   onChange: (value: TValue[]) => void;
+  className?: string;
 }
 
 export interface CustomFieldRendererProps<TValue> {
@@ -74,6 +92,7 @@ export interface FieldRendererProps<
   name: K;
   field: FormField;
   renderers?: Renderers;
+  classNames?: ClassNames;
 }
 
 export interface FormRendererProps<
@@ -83,4 +102,5 @@ export interface FormRendererProps<
   form: FormInstance<TSchema>;
   schema: TSchema;
   renderers?: Renderers;
+  classNames?: ClassNames;
 }

@@ -7,10 +7,11 @@ export function SelectRenderer<TValue extends string = string>({
   value,
   options,
   onChange,
+  className,
 }: SelectRendererProps<TValue>) {
   return (
     <select
-      className="mf-select"
+      className={['mf-select', className].filter(Boolean).join(' ')}
       id={id}
       name={name}
       value={value}

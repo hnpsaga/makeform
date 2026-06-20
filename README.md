@@ -791,3 +791,38 @@ Or in JavaScript:
 ```js
 import '@hnpsaga/makeform/dist/styles/default.css';
 ```
+
+### Styling Overrides
+
+Add custom CSS class names to any rendered element without replacing renderers:
+
+```tsx
+<FormRenderer
+  form={form}
+  schema={schema}
+  classNames={{
+    form: 'my-form',
+    grid: 'my-grid',
+    field: 'my-field',
+    label: 'my-label',
+    input: 'my-input',
+    textarea: 'my-textarea',
+    select: 'my-select',
+    checkbox: 'my-checkbox',
+    radio: 'my-radio',
+    error: 'my-error',
+  }}
+/>
+```
+
+Default classes are always preserved. Custom classes are appended:
+
+```html
+<input class="mf-input my-input" />
+```
+
+The `classNames` prop is optional and type-safe. When omitted, rendering is identical to previous behavior.
+
+Supported keys: `form`, `grid`, `field`, `label`, `input`, `textarea`, `select`, `checkbox`, `radio`, `error`.
+
+Custom renderers own their own styling and are not affected by this API.
