@@ -10,13 +10,21 @@ function getDefaultValue(field: any): any {
   }
   switch (field.type) {
     case 'text':
+    case 'textarea':
+    case 'email':
+    case 'phone':
       return '';
     case 'number':
       return 0;
     case 'checkbox':
       return false;
     case 'select':
+    case 'radio':
       return field.options?.[0]?.value ?? '';
+    case 'date':
+      return new Date();
+    case 'multi-select':
+      return [];
     default:
       return undefined;
   }

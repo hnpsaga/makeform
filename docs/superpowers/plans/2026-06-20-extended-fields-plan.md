@@ -574,7 +574,7 @@ graph TD
 - Modify: [src/state/createForm.ts](file:///home/hnpsaga/projects/makeform/src/state/createForm.ts)
 - Test: [test/state/extended-createForm.test.ts](file:///home/hnpsaga/projects/makeform/test/state/extended-createForm.test.ts)
 
-- [ ] **Step 1: Write tests for default value resolution of new fields**
+- [x] **Step 1: Write tests for default value resolution of new fields**
       Create `test/state/extended-createForm.test.ts`:
 
   ```ts
@@ -654,10 +654,10 @@ graph TD
   });
   ```
 
-- [ ] **Step 2: Run test to verify it fails**
+- [x] **Step 2: Run test to verify it fails**
       Run: `npm run test`
       Expected: FAIL (Cannot resolve defaults for the new field types, resulting in undefined)
-- [ ] **Step 3: Update default values resolution in `src/state/createForm.ts`**
+- [x] **Step 3: Update default values resolution in `src/state/createForm.ts`**
       Modify [src/state/createForm.ts](file:///home/hnpsaga/projects/makeform/src/state/createForm.ts):
   ```diff
   --- a/src/state/createForm.ts
@@ -685,10 +685,10 @@ graph TD
      }
    }
   ```
-- [ ] **Step 4: Run test to verify it passes**
+- [x] **Step 4: Run test to verify it passes**
       Run: `npm run test`
       Expected: PASS
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
   ```bash
   git add src/state/createForm.ts test/state/extended-createForm.test.ts
   git commit -m "feat: support extended fields in default value resolution"
