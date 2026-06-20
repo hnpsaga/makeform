@@ -48,6 +48,168 @@ type FormValues = InferValues<typeof schema>;
 // { name: string; age: number; role: 'admin' | 'user' }
 ```
 
+## Field Builders
+
+MakeForm provides a set of type-safe builder functions to define your form schema. Each builder defines a field's data type, default value, validation rules, and other metadata.
+
+### `textField(config?)`
+
+Defines a single-line text input field.
+
+- **Inferred Type**: `string`
+- **Default Value**: `''`
+- **Config**: Extends `BaseField<string>`
+
+```ts
+const name = textField({ label: 'Name', defaultValue: 'John Doe' });
+```
+
+### `textareaField(config?)`
+
+Defines a multi-line text area input field.
+
+- **Inferred Type**: `string`
+- **Default Value**: `''`
+- **Config**: Extends `BaseField<string>`
+
+```ts
+const biography = textareaField({ label: 'Bio', defaultValue: 'Tell us about yourself...' });
+```
+
+### `numberField(config?)`
+
+Defines a numeric input field.
+
+- **Inferred Type**: `number`
+- **Default Value**: `0`
+- **Config**: Extends `BaseField<number>`
+
+```ts
+const age = numberField({ label: 'Age', defaultValue: 18 });
+```
+
+### `checkboxField(config?)`
+
+Defines a boolean checkbox input.
+
+- **Inferred Type**: `boolean`
+- **Default Value**: `false`
+- **Config**: Extends `BaseField<boolean>`
+
+```ts
+const marketingOptIn = checkboxField({ label: 'Subscribe to newsletter' });
+```
+
+### `emailField(config?)`
+
+Defines an email input field.
+
+- **Inferred Type**: `string`
+- **Default Value**: `''`
+- **Config**: Extends `BaseField<string>`
+
+```ts
+const email = emailField({ label: 'Email Address' });
+```
+
+### `phoneField(config?)`
+
+Defines a phone number input field.
+
+- **Inferred Type**: `string`
+- **Default Value**: `''`
+- **Config**: Extends `BaseField<string>`
+
+```ts
+const phone = phoneField({ label: 'Phone Number' });
+```
+
+### `dateField(config?)`
+
+Defines a date input field.
+
+- **Inferred Type**: `Date`
+- **Default Value**: `new Date()` (the instant the form state is initialized)
+- **Config**: Extends `BaseField<Date>`
+
+```ts
+const dateOfBirth = dateField({ label: 'Date of Birth' });
+```
+
+### `selectField(config)`
+
+Defines a select dropdown field.
+
+- **Inferred Type**: String union of option values
+- **Default Value**: The value of the first option, or `''` if options are empty
+- **Config**: Requires `options: readonly SelectOption[]`
+
+```ts
+const role = selectField({
+  label: 'Role',
+  options: [
+    { label: 'Admin', value: 'admin' },
+    { label: 'User', value: 'user' },
+  ] as const,
+});
+```
+
+### `radioField(config)`
+
+Defines a radio button group.
+
+- **Inferred Type**: String union of option values
+- **Default Value**: The value of the first option, or `''` if options are empty
+- **Config**: Requires `options: readonly SelectOption[]`
+
+```ts
+const colorPreference = radioField({
+  label: 'Favorite Color',
+  options: [
+    { label: 'Red', value: 'red' },
+    { label: 'Blue', value: 'blue' },
+  ] as const,
+});
+```
+
+### `multiSelectField(config)`
+
+Defines a multi-select field (e.g. checkbox group or tag input).
+
+- **Inferred Type**: Array of string union of option values (e.g., `('admin' | 'user')[]`)
+- **Default Value**: `[]`
+- **Config**: Requires `options: readonly SelectOption[]`
+
+```ts
+const userGroups = multiSelectField({
+  label: 'Groups',
+  options: [
+    { label: 'Editors', value: 'editors' },
+    { label: 'Viewers', value: 'viewers' },
+  ] as const,
+});
+```
+
+### `customField<TValue>(config?)`
+
+Defines a custom/complex field type for nested structures or third-party components.
+
+- **Inferred Type**: `TValue` (defaults to `unknown` if type parameter is omitted)
+- **Default Value**: `undefined` (or the specified `defaultValue`)
+- **Config**: Extends `BaseField<TValue>`
+
+```ts
+interface GeoLocation {
+  latitude: number;
+  longitude: number;
+}
+
+const location = customField<GeoLocation>({
+  label: 'Coordinates',
+  defaultValue: { latitude: 0, longitude: 0 },
+});
+```
+
 ## Validation
 
 Attach validators directly to any field definition. Errors accumulate — all failing validators are collected, not just the first.
@@ -102,6 +264,8 @@ const result = validateForm(schema, {
 | `max(n)`               | `string`   | Fails if string length > `n`                                      |
 | `max(n)`               | `number`   | Fails if numeric value > `n`                                      |
 | `pattern(regex, msg?)` | `string`   | Fails if value does not match `regex`                             |
+| `email(msg?)`          | `string`   | Fails if value does not match standard email format               |
+| `phone(msg?)`          | `string`   | Fails if value does not match simple phone number format          |
 | `custom(fn)`           | any        | User-supplied function — return `null` (valid) or an error string |
 
 ### `required()`
@@ -137,6 +301,26 @@ Validates a string against a regular expression.
 ```ts
 textField({
   validators: [pattern(/^\d{5}$/, 'Must be a 5-digit ZIP code')],
+});
+```
+
+### `email(message?)`
+
+Validates that a string matches a standard email format.
+
+```ts
+emailField({
+  validators: [email('Please enter a valid email address')],
+});
+```
+
+### `phone(message?)`
+
+Validates that a string matches a simple phone format.
+
+```ts
+phoneField({
+  validators: [phone('Please enter a valid phone number')],
 });
 ```
 
@@ -187,10 +371,13 @@ Manage form state reactively using a framework-agnostic form controller.
 
 Initializes the form state engine with a schema, returning a form instance. Initial values are derived from `defaultValue` on the field configs, or fall back to:
 
-- `text`: `''`
+- `text`, `textarea`, `email`, `phone`: `''`
 - `number`: `0`
 - `checkbox`: `false`
-- `select`: The value of the first option, or `''`
+- `select`, `radio`: The value of the first option, or `''`
+- `date`: `new Date()` (instantiated at initialization time)
+- `multi-select`: `[]`
+- `custom`: `undefined`
 
 ```ts
 import { createForm, textField, numberField, checkboxField } from '@hnpsaga/makeform';

@@ -69,3 +69,23 @@ export function pattern(regex: RegExp, message?: string): Validator<string> {
 export function custom<T>(fn: (value: T) => string | null): Validator<T> {
   return fn;
 }
+
+/**
+ * Validates a standard email format.
+ */
+export function email(message?: string): Validator<string> {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return (value: string): string | null => {
+    return emailRegex.test(value) ? null : (message ?? 'Invalid email format');
+  };
+}
+
+/**
+ * Validates a simple phone number format.
+ */
+export function phone(message?: string): Validator<string> {
+  const phoneRegex = /^\+?[0-9\s\-()]{7,20}$/;
+  return (value: string): string | null => {
+    return phoneRegex.test(value) ? null : (message ?? 'Invalid phone number format');
+  };
+}
