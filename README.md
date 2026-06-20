@@ -529,3 +529,83 @@ React Adapter requires React 18 or later as a peer dependency:
   "react": "^18.0.0 || ^19.0.0"
 }
 ```
+
+## Schema-Driven Form Rendering
+
+### `FormRenderer`
+
+Automatically renders all form fields from a schema — no manual wiring required.
+
+```tsx
+import { useForm, textField, emailField, required, FormRenderer } from '@hnpsaga/makeform';
+
+const schema = {
+  name: textField({ label: 'Full Name', validators: [required()] }),
+  email: emailField({ label: 'Email Address', validators: [required()] }),
+};
+
+function MyForm() {
+  const form = useForm(schema);
+
+  function handleSubmit() {
+    const result = form.validate();
+    if (result.valid) {
+      console.log(form.getValues());
+    }
+  }
+
+  return (
+    <div>
+      <FormRenderer form={form} schema={schema} />
+      <button onClick={handleSubmit}>Submit</button>
+      <button onClick={() => form.reset()}>Reset</button>
+    </div>
+  );
+}
+```
+
+### Supported Field Types
+
+| Field Builder      | HTML Control                        |
+| ------------------ | ----------------------------------- |
+| `textField`        | `<input type="text" />`             |
+| `textareaField`    | `<textarea />`                      |
+| `emailField`       | `<input type="email" />`            |
+| `phoneField`       | `<input type="tel" />`              |
+| `numberField`      | `<input type="number" />`           |
+| `dateField`        | `<input type="date" />`             |
+| `checkboxField`    | `<input type="checkbox" />`         |
+| `radioField`       | `<input type="radio" />` per option |
+| `selectField`      | `<select>`                          |
+| `multiSelectField` | `<select multiple>`                 |
+
+### Labels, Errors, Accessibility
+
+- Labels use `field.label` with the field key as fallback (e.g. a field `email` without a label renders `<label>email</label>`).
+- Validation errors appear in `<div role="alert">` after `form.validate()` is called.
+- Label `htmlFor` links to input `id` (both equal to the field key).
+- Radio groups are wrapped in `<div role="radiogroup">`.
+- Each field is wrapped in `<div data-field={name}>` for layout customization.
+
+### `FieldRenderer`
+
+`FieldRenderer` is also exported for advanced use. It renders a single field including its label and error display:
+
+```tsx
+import { useForm, textField, FieldRenderer } from '@hnpsaga/makeform';
+
+const schema = { name: textField({ label: 'Name' }) };
+
+function MyForm() {
+  const form = useForm(schema);
+  return <FieldRenderer form={form} name="name" field={schema.name} />;
+}
+```
+
+### V1 Limitations
+
+- No styling (unstyled semantic HTML only).
+- `customField` is not rendered in V1 — fields are silently skipped.
+- No layout configuration.
+- No custom renderer overrides (planned for Phase 10).
+- No theme system (planned for Phase 9).
