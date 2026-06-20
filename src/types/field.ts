@@ -56,7 +56,7 @@ export interface MultiSelectField<TValue extends string = string> extends BaseFi
   readonly options: readonly SelectOption<TValue>[];
 }
 
-export interface CustomField<TValue> extends BaseField<TValue> {
+export interface CustomField<TValue = unknown> extends BaseField<TValue> {
   readonly type: 'custom';
 }
 
@@ -71,5 +71,4 @@ export type FormField =
   | PhoneField
   | RadioField
   | MultiSelectField
-  | CustomField<any>;
-
+  | CustomField<unknown>;

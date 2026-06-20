@@ -1,5 +1,5 @@
 import { expectTypeOf, test } from 'vitest';
-import type { InferField, InferValues } from '../src/index.js';
+import type { InferField } from '../src/index.js';
 import type {
   TextareaField,
   EmailField,
@@ -16,6 +16,6 @@ test('extended single field inference works', () => {
   expectTypeOf<InferField<DateField>>().toEqualTypeOf<Date>();
   expectTypeOf<InferField<PhoneField>>().toEqualTypeOf<string>();
   expectTypeOf<InferField<RadioField<'male' | 'female'>>>().toEqualTypeOf<'male' | 'female'>();
-  expectTypeOf<InferField<MultiSelectField<'react'>>>().toEqualTypeOf<('react')[]>();
+  expectTypeOf<InferField<MultiSelectField<'react'>>>().toEqualTypeOf<'react'[]>();
   expectTypeOf<InferField<CustomField<string>>>().toEqualTypeOf<string>();
 });
