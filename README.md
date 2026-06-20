@@ -1,17 +1,151 @@
 # MakeForm
 
-Lightweight schema-driven form library with strong TypeScript type inference.
+Schema-driven TypeScript forms for React.
 
-## Status
+Build forms with strong type inference, validation, state management, dynamic rendering, and extensible UI customization — all from a single schema.
 
-**Under Development**
+---
 
-## Goals
+## Why MakeForm?
 
-- **Schema-driven forms**: Define form structure and rules in a single, readable schema.
-- **Strong TypeScript inference**: Automatic types for form values, errors, and validation rules directly from your schema.
-- **Validation support**: Efficient built-in and custom validation rules.
-- **Great developer experience**: Minimal boilerplate, intuitive APIs, and comprehensive TypeScript autocomplete.
+Most form libraries force you to choose between:
+
+- Strong typing
+- Dynamic form generation
+- Flexible UI customization
+
+MakeForm provides all three.
+
+Define your form once and get:
+
+✅ Strong TypeScript inference
+
+✅ Built-in validation
+
+✅ Form state management
+
+✅ Dynamic form rendering
+
+✅ React integration
+
+✅ Renderer overrides
+
+✅ Custom field support
+
+✅ Styling overrides
+
+✅ Framework-agnostic core engine
+
+---
+
+## Features
+
+### Strong Type Inference
+
+```ts
+const schema = {
+  name: textField(),
+  age: numberField(),
+  subscribed: checkboxField(),
+};
+
+type FormValues = InferValues<typeof schema>;
+
+/*
+{
+  name: string;
+  age: number;
+  subscribed: boolean;
+}
+*/
+```
+
+---
+
+### Schema-Driven Forms
+
+Define your form structure in one place.
+
+```ts
+const schema = {
+  name: textField({
+    label: 'Full Name',
+    validators: [required()],
+  }),
+
+  email: emailField({
+    label: 'Email Address',
+    validators: [required(), email()],
+  }),
+
+  age: numberField({
+    label: 'Age',
+    validators: [min(18)],
+  }),
+};
+```
+
+---
+
+### Dynamic Form Rendering
+
+Render complete forms directly from a schema.
+
+```tsx
+<FormRenderer form={form} schema={schema} />
+```
+
+No manual wiring required.
+
+---
+
+### Extensible UI
+
+Replace any built-in field renderer.
+
+```tsx
+<FormRenderer
+  form={form}
+  schema={schema}
+  renderers={{
+    text: CustomTextRenderer,
+  }}
+/>
+```
+
+Or create entirely new field experiences.
+
+```tsx
+<FormRenderer
+  form={form}
+  schema={schema}
+  renderers={{
+    custom: {
+      richText: RichTextRenderer,
+    },
+  }}
+/>
+```
+
+---
+
+### Styling Overrides
+
+Keep the default theme or integrate with your own design system.
+
+```tsx
+<FormRenderer
+  form={form}
+  schema={schema}
+  classNames={{
+    input: 'my-input',
+    field: 'my-field',
+    error: 'my-error',
+  }}
+/>
+```
+
+---
 
 ## Installation
 
@@ -19,461 +153,136 @@ Lightweight schema-driven form library with strong TypeScript type inference.
 npm install @hnpsaga/makeform
 ```
 
-## Usage
+Peer dependency:
 
-### Defining a Schema
-
-```ts
-import { textField, numberField, selectField } from '@hnpsaga/makeform';
-
-const schema = {
-  name: textField({ label: 'Name' }),
-  age: numberField({ label: 'Age' }),
-  role: selectField({
-    label: 'Role',
-    options: [
-      { label: 'Admin', value: 'admin' },
-      { label: 'User', value: 'user' },
-    ],
-  }),
-};
+```bash
+npm install react
 ```
 
-### Type Inference
+Supports:
 
-```ts
-import type { InferValues } from '@hnpsaga/makeform';
+- React 18
+- React 19
 
-type FormValues = InferValues<typeof schema>;
-// { name: string; age: number; role: 'admin' | 'user' }
-```
+---
 
-## Field Builders
+## Quick Start
 
-MakeForm provides a set of type-safe builder functions to define your form schema. Each builder defines a field's data type, default value, validation rules, and other metadata.
-
-### `textField(config?)`
-
-Defines a single-line text input field.
-
-- **Inferred Type**: `string`
-- **Default Value**: `''`
-- **Config**: Extends `BaseField<string>`
-
-```ts
-const name = textField({ label: 'Name', defaultValue: 'John Doe' });
-```
-
-### `textareaField(config?)`
-
-Defines a multi-line text area input field.
-
-- **Inferred Type**: `string`
-- **Default Value**: `''`
-- **Config**: Extends `BaseField<string>`
-
-```ts
-const biography = textareaField({ label: 'Bio', defaultValue: 'Tell us about yourself...' });
-```
-
-### `numberField(config?)`
-
-Defines a numeric input field.
-
-- **Inferred Type**: `number`
-- **Default Value**: `0`
-- **Config**: Extends `BaseField<number>`
-
-```ts
-const age = numberField({ label: 'Age', defaultValue: 18 });
-```
-
-### `checkboxField(config?)`
-
-Defines a boolean checkbox input.
-
-- **Inferred Type**: `boolean`
-- **Default Value**: `false`
-- **Config**: Extends `BaseField<boolean>`
-
-```ts
-const marketingOptIn = checkboxField({ label: 'Subscribe to newsletter' });
-```
-
-### `emailField(config?)`
-
-Defines an email input field.
-
-- **Inferred Type**: `string`
-- **Default Value**: `''`
-- **Config**: Extends `BaseField<string>`
-
-```ts
-const email = emailField({ label: 'Email Address' });
-```
-
-### `phoneField(config?)`
-
-Defines a phone number input field.
-
-- **Inferred Type**: `string`
-- **Default Value**: `''`
-- **Config**: Extends `BaseField<string>`
-
-```ts
-const phone = phoneField({ label: 'Phone Number' });
-```
-
-### `dateField(config?)`
-
-Defines a date input field.
-
-- **Inferred Type**: `Date`
-- **Default Value**: `new Date()` (the instant the form state is initialized)
-- **Config**: Extends `BaseField<Date>`
-
-```ts
-const dateOfBirth = dateField({ label: 'Date of Birth' });
-```
-
-### `selectField(config)`
-
-Defines a select dropdown field.
-
-- **Inferred Type**: String union of option values
-- **Default Value**: The value of the first option, or `''` if options are empty
-- **Config**: Requires `options: readonly SelectOption[]`
-
-```ts
-const role = selectField({
-  label: 'Role',
-  options: [
-    { label: 'Admin', value: 'admin' },
-    { label: 'User', value: 'user' },
-  ] as const,
-});
-```
-
-### `radioField(config)`
-
-Defines a radio button group.
-
-- **Inferred Type**: String union of option values
-- **Default Value**: The value of the first option, or `''` if options are empty
-- **Config**: Requires `options: readonly SelectOption[]`
-
-```ts
-const colorPreference = radioField({
-  label: 'Favorite Color',
-  options: [
-    { label: 'Red', value: 'red' },
-    { label: 'Blue', value: 'blue' },
-  ] as const,
-});
-```
-
-### `multiSelectField(config)`
-
-Defines a multi-select field (e.g. checkbox group or tag input).
-
-- **Inferred Type**: Array of string union of option values (e.g., `('admin' | 'user')[]`)
-- **Default Value**: `[]`
-- **Config**: Requires `options: readonly SelectOption[]`
-
-```ts
-const userGroups = multiSelectField({
-  label: 'Groups',
-  options: [
-    { label: 'Editors', value: 'editors' },
-    { label: 'Viewers', value: 'viewers' },
-  ] as const,
-});
-```
-
-### `customField<TValue>(config?)`
-
-Defines a custom/complex field type for nested structures or third-party components.
-
-- **Inferred Type**: `TValue` (defaults to `unknown` if type parameter is omitted)
-- **Default Value**: `undefined` (or the specified `defaultValue`)
-- **Config**: Extends `BaseField<TValue>`
-
-```ts
-interface GeoLocation {
-  latitude: number;
-  longitude: number;
-}
-
-const location = customField<GeoLocation>({
-  label: 'Coordinates',
-  defaultValue: { latitude: 0, longitude: 0 },
-});
-```
-
-## Validation
-
-Attach validators directly to any field definition. Errors accumulate — all failing validators are collected, not just the first.
-
-```ts
-import {
-  textField,
-  numberField,
-  required,
-  min,
-  max,
-  pattern,
-  custom,
-  validateForm,
-} from '@hnpsaga/makeform';
+```tsx
+import { useForm, FormRenderer, textField, emailField, required, email } from '@hnpsaga/makeform';
 
 const schema = {
   name: textField({
-    validators: [required(), min(3), max(50)],
+    label: 'Name',
+    validators: [required()],
+  }),
+
+  email: emailField({
+    label: 'Email',
+    validators: [required(), email()],
+  }),
+};
+
+export default function App() {
+  const form = useForm(schema);
+
+  const submit = form.handleSubmit((values) => {
+    console.log(values);
+  });
+
+  return (
+    <>
+      <FormRenderer form={form} schema={schema} />
+
+      <button onClick={submit}>Submit</button>
+    </>
+  );
+}
+```
+
+---
+
+## Core Concepts
+
+### 1. Schema Definition
+
+Schemas define:
+
+- Field types
+- Labels
+- Default values
+- Validation rules
+- Rendering metadata
+
+Example:
+
+```ts
+const schema = {
+  firstName: textField({
+    label: 'First Name',
+    validators: [required()],
   }),
 
   age: numberField({
-    validators: [min(18), max(120)],
-  }),
-
-  email: textField({
-    validators: [required(), pattern(/^[^@]+@[^@]+\.[^@]+$/, 'Invalid email address')],
+    label: 'Age',
+    validators: [min(18)],
   }),
 };
-
-const result = validateForm(schema, {
-  name: '',
-  age: 15,
-  email: 'notanemail',
-});
-
-// result.valid  → false
-// result.errors → {
-//   name:  ['Field is required', 'Minimum length is 3'],
-//   age:   ['Minimum value is 18'],
-//   email: ['Invalid email address'],
-// }
 ```
 
-### Built-in Validators
+---
 
-| Validator              | Applies to | Description                                                       |
-| ---------------------- | ---------- | ----------------------------------------------------------------- |
-| `required()`           | any        | Fails for `null`, `undefined`, or empty/whitespace strings        |
-| `min(n)`               | `string`   | Fails if string length < `n`                                      |
-| `min(n)`               | `number`   | Fails if numeric value < `n`                                      |
-| `max(n)`               | `string`   | Fails if string length > `n`                                      |
-| `max(n)`               | `number`   | Fails if numeric value > `n`                                      |
-| `pattern(regex, msg?)` | `string`   | Fails if value does not match `regex`                             |
-| `email(msg?)`          | `string`   | Fails if value does not match standard email format               |
-| `phone(msg?)`          | `string`   | Fails if value does not match simple phone number format          |
-| `custom(fn)`           | any        | User-supplied function — return `null` (valid) or an error string |
+### 2. Type Inference
 
-### `required()`
-
-Ensures the field is not empty.
+Generate form value types automatically.
 
 ```ts
-textField({ validators: [required()] });
+type FormValues = InferValues<typeof schema>;
 ```
 
-### `min(n)`
+No manual interfaces required.
 
-For strings, checks minimum character length. For numbers, checks minimum value.
+---
 
-```ts
-textField({ validators: [min(3)] }); // at least 3 characters
-numberField({ validators: [min(18)] }); // at least 18
-```
+### 3. Validation
 
-### `max(n)`
-
-For strings, checks maximum character length. For numbers, checks maximum value.
+Attach validators directly to fields.
 
 ```ts
-textField({ validators: [max(100)] }); // at most 100 characters
-numberField({ validators: [max(65)] }); // at most 65
-```
-
-### `pattern(regex, message?)`
-
-Validates a string against a regular expression.
-
-```ts
-textField({
-  validators: [pattern(/^\d{5}$/, 'Must be a 5-digit ZIP code')],
-});
-```
-
-### `email(message?)`
-
-Validates that a string matches a standard email format.
-
-```ts
-emailField({
-  validators: [email('Please enter a valid email address')],
-});
-```
-
-### `phone(message?)`
-
-Validates that a string matches a simple phone format.
-
-```ts
-phoneField({
-  validators: [phone('Please enter a valid phone number')],
-});
-```
-
-### `custom(fn)`
-
-Provide any validation logic. Return `null` when valid, a string when invalid.
-
-```ts
-textField({
-  validators: [custom((value) => (value.startsWith('https') ? null : 'URL must use HTTPS'))],
-});
-```
-
-### `validateField(value, validators)`
-
-Validates a single value against a list of validators. Returns `string[]` of errors.
-
-```ts
-import { validateField, required, min } from '@hnpsaga/makeform';
-
-const errors = validateField('', [required(), min(3)]);
-// ['Field is required', 'Minimum length is 3']
-```
-
-### `validateForm(schema, values)`
-
-Validates all fields in a schema and returns a `ValidationResult`.
-
-```ts
-const result = validateForm(schema, values);
-// { valid: boolean; errors: Record<string, string[]> }
-```
-
-### `ValidationResult`
-
-```ts
-type ValidationResult = {
-  valid: boolean;
-  errors: Record<string, string[]>;
-};
-```
-
-## Form State Engine
-
-Manage form state reactively using a framework-agnostic form controller.
-
-### `createForm(schema)`
-
-Initializes the form state engine with a schema, returning a form instance. Initial values are derived from `defaultValue` on the field configs, or fall back to:
-
-- `text`, `textarea`, `email`, `phone`: `''`
-- `number`: `0`
-- `checkbox`: `false`
-- `select`, `radio`: The value of the first option, or `''`
-- `date`: `new Date()` (instantiated at initialization time)
-- `multi-select`: `[]`
-- `custom`: `undefined`
-
-```ts
-import { createForm, textField, numberField, checkboxField } from '@hnpsaga/makeform';
-
 const schema = {
-  name: textField({ defaultValue: 'Alice' }),
-  age: numberField({ label: 'Age' }),
-  acceptedTerms: checkboxField({ label: 'Terms and Conditions' }),
+  password: textField({
+    validators: [required(), min(8)],
+  }),
 };
-
-const form = createForm(schema);
 ```
 
-### Form Instance API
-
-A form instance returned by `createForm` exposes the following methods:
-
-#### `getValues()`
-
-Retrieves a copy of the current values of all fields.
-
-```ts
-const values = form.getValues();
-// { name: 'Alice', age: 0, acceptedTerms: false }
-```
-
-#### `getValue(field)`
-
-Retrieves the current value of a single field.
-
-```ts
-const name = form.getValue('name'); // 'Alice'
-```
-
-#### `setValue(field, value)`
-
-Sets the value of a single field. This automatically marks the field as `touched` and updates its `dirty` flag (calculated by comparing the new value to its initial value). If any state actually changed, all active subscribers are notified.
-
-```ts
-form.setValue('name', 'Bob');
-form.setValue('age', 25);
-```
-
-#### `validate()`
-
-Validates all fields using the schema's validators. If the validation errors change, the form's `errors` state is updated and subscribers are notified. Returns a `ValidationResult`.
+Validate manually:
 
 ```ts
 const result = form.validate();
-// { valid: true, errors: {} }
+
+if (!result.valid) {
+  console.log(result.errors);
+}
 ```
 
-#### `reset()`
-
-Resets the form values back to their initial state, clears all errors, and resets the `touched` and `dirty` states of all fields to `false`. Subscribers are notified.
+Built-in validators:
 
 ```ts
-form.reset();
+required();
+min();
+max();
+pattern();
+email();
+phone();
+custom();
 ```
 
-#### `subscribe(listener)`
+---
 
-Subscribes to form state changes. The listener is called with the current `FormState` whenever `values`, `errors`, `touched`, or `dirty` flags update. Returns an unsubscribe function.
+### 4. Form Submission
 
-```ts
-const unsubscribe = form.subscribe((state) => {
-  console.log('Form State Updated:', state);
-  // state structure:
-  // {
-  //   values: { name: 'Alice', age: 25, acceptedTerms: false },
-  //   errors: { age: ['Minimum value is 18'] },
-  //   touched: { name: true, age: true, acceptedTerms: false },
-  //   dirty: { name: false, age: true, acceptedTerms: false }
-  // }
-});
-
-// Call the returned function to unsubscribe
-unsubscribe();
-```
-
-#### `markAllTouched()`
-
-Marks every field as touched. This is useful for revealing validation errors before the user has interacted with a field (e.g., on submit).
-
-```ts
-form.markAllTouched();
-```
-
-#### `handleSubmit(callback)`
-
-Returns a submit function that:
-
-1. Marks all fields as touched.
-2. Runs validation.
-3. If validation fails, does nothing.
-4. If validation succeeds, calls the callback with the typed form values.
+MakeForm includes a submission helper.
 
 ```ts
 const submit = form.handleSubmit((values) => {
@@ -483,277 +292,109 @@ const submit = form.handleSubmit((values) => {
 submit();
 ```
 
-The callback receives fully typed values inferred from the schema.
+`handleSubmit()` automatically:
 
-## React Adapter
+1. Marks all fields as touched
+2. Runs validation
+3. Prevents invalid submission
+4. Returns strongly typed values
 
-MakeForm provides a thin React integration layer on top of the core form engine.
-All state management, validation, and type inference flows through the existing `createForm()` engine.
+---
+
+## Form State Engine
+
+The core engine is framework agnostic.
+
+```ts
+import { createForm } from '@hnpsaga/makeform';
+
+const form = createForm(schema);
+```
+
+Available APIs:
+
+```ts
+form.getValues();
+form.getValue('name');
+
+form.setValue('name', 'John');
+
+form.validate();
+
+form.reset();
+
+form.markAllTouched();
+
+form.handleSubmit(callback);
+
+form.subscribe(listener);
+```
+
+---
+
+## React Integration
 
 ### useForm
 
-Creates and manages a form instance for the lifetime of the component.
+Creates and manages a form instance.
 
 ```tsx
-import { useForm, textField, numberField } from '@hnpsaga/makeform';
-
-const schema = {
-  name: textField({ validators: [required()] }),
-  age: numberField(),
-};
-
-function ExampleForm() {
-  const form = useForm(schema);
-
-  return <button onClick={() => form.validate()}>Validate</button>;
-}
+const form = useForm(schema);
 ```
+
+---
 
 ### useField
 
-Subscribes a component to a specific field's state. Only re-renders when that
-field's `value`, `errors`, `touched`, or `dirty` state changes — not on unrelated
-field updates.
+Subscribe to a single field.
 
 ```tsx
-import { useForm, useField, textField, numberField } from '@hnpsaga/makeform';
+const name = useField(form, 'name');
+```
 
-const schema = {
-  name: textField(),
-  age: numberField(),
-};
+Returns:
 
-function ExampleForm() {
-  const form = useForm(schema);
-  const name = useField(form, 'name');
-
-  return (
-    <div>
-      <input value={name.value} onChange={(e) => name.setValue(e.target.value)} />
-      {name.errors.map((error) => (
-        <div key={error}>{error}</div>
-      ))}
-    </div>
-  );
+```ts
+{
+  (value, errors, touched, dirty, setValue);
 }
 ```
 
-**`useField` returns:**
-| Property | Type | Description |
-|---|---|---|
-| `value` | `TValue` | Current field value, typed from schema |
-| `errors` | `string[]` | Current validation error messages |
-| `touched` | `boolean` | Whether the field has been interacted with |
-| `dirty` | `boolean` | Whether the value differs from its initial value |
-| `setValue` | `(value: TValue) => void` | Update the field value |
+Only re-renders when that field changes.
 
-### Requirements
+---
 
-React Adapter requires React 18 or later as a peer dependency:
+## Dynamic Form Rendering
 
-```json
-"peerDependencies": {
-  "react": "^18.0.0 || ^19.0.0"
-}
-```
+### FormRenderer
 
-## Schema-Driven Form Rendering
-
-### `FormRenderer`
-
-Automatically renders all form fields from a schema — no manual wiring required.
+Automatically renders a complete form.
 
 ```tsx
-import { useForm, textField, emailField, required, FormRenderer } from '@hnpsaga/makeform';
-
-const schema = {
-  name: textField({ label: 'Full Name', validators: [required()] }),
-  email: emailField({ label: 'Email Address', validators: [required()] }),
-};
-
-function MyForm() {
-  const form = useForm(schema);
-
-  function handleSubmit() {
-    const result = form.validate();
-    if (result.valid) {
-      console.log(form.getValues());
-    }
-  }
-
-  return (
-    <div>
-      <FormRenderer form={form} schema={schema} />
-      <button onClick={handleSubmit}>Submit</button>
-      <button onClick={() => form.reset()}>Reset</button>
-    </div>
-  );
-}
+<FormRenderer form={form} schema={schema} />
 ```
 
-### Supported Field Types
+Supported field types:
 
-| Field Builder      | HTML Control                           |
-| ------------------ | -------------------------------------- |
-| `textField`        | `<input type="text" />`                |
-| `textareaField`    | `<textarea />`                         |
-| `emailField`       | `<input type="email" />`               |
-| `phoneField`       | `<input type="tel" />`                 |
-| `numberField`      | `<input type="number" />`              |
-| `dateField`        | `<input type="date" />`                |
-| `checkboxField`    | `<input type="checkbox" />`            |
-| `radioField`       | `<input type="radio" />` per option    |
-| `selectField`      | `<select>`                             |
-| `multiSelectField` | `<select multiple>`                    |
-| `customField`      | Custom renderer via `renderers.custom` |
+| Field            |
+| ---------------- |
+| textField        |
+| textareaField    |
+| emailField       |
+| phoneField       |
+| numberField      |
+| dateField        |
+| checkboxField    |
+| radioField       |
+| selectField      |
+| multiSelectField |
+| customField      |
 
-### Labels, Errors, Accessibility
+---
 
-- Labels use `field.label` with the field key as fallback (e.g. a field `email` without a label renders `<label>email</label>`).
-- Validation errors appear in `<div role="alert">` after `form.validate()` is called.
-- Label `htmlFor` links to input `id` (both equal to the field key).
-- Radio groups are wrapped in `<div role="radiogroup">`.
-- Each field is wrapped in `<div data-field={name}>` for layout customization.
+## Renderer Overrides
 
-### `FieldRenderer`
-
-`FieldRenderer` is also exported for advanced use. It renders a single field including its label and error display:
-
-```tsx
-import { useForm, textField, FieldRenderer } from '@hnpsaga/makeform';
-
-const schema = { name: textField({ label: 'Name' }) };
-
-function MyForm() {
-  const form = useForm(schema);
-  return <FieldRenderer form={form} name="name" field={schema.name} />;
-}
-```
-
-### Renderer Overrides
-
-Replace any built-in renderer with a custom component via the `renderers` prop:
-
-```tsx
-import { useForm, textField, emailField, FormRenderer } from '@hnpsaga/makeform';
-import type { PrimitiveFieldRendererProps } from '@hnpsaga/makeform';
-
-function CustomTextRenderer({ id, name, value, onChange }: PrimitiveFieldRendererProps<string>) {
-  return (
-    <input
-      type="text"
-      id={id}
-      name={name}
-      value={value}
-      onChange={(e) => onChange(e.target.value)}
-      style={{ border: '2px solid blue' }}
-    />
-  );
-}
-
-const schema = {
-  name: textField({ label: 'Name' }),
-  email: emailField({ label: 'Email' }),
-};
-
-function MyForm() {
-  const form = useForm(schema);
-  return <FormRenderer form={form} schema={schema} renderers={{ text: CustomTextRenderer }} />;
-}
-```
-
-Each override receives the same props as the built-in renderer. The `Renderers` type ensures only valid field type keys are accepted.
-
-`FieldRenderer` also accepts the `renderers` prop when used standalone.
-
-```tsx
-<FieldRenderer
-  form={form}
-  name="name"
-  field={schema.name}
-  renderers={{ text: CustomTextRenderer }}
-/>
-```
-
-### Custom Field Renderers
-
-Custom field definitions can be rendered with custom renderer components via the `renderers.custom` prop:
-
-```tsx
-import { useForm, customField, FormRenderer } from '@hnpsaga/makeform';
-import type { CustomFieldRendererProps } from '@hnpsaga/makeform';
-
-function RichTextRenderer({
-  value,
-  errors,
-  touched,
-  dirty,
-  setValue,
-}: CustomFieldRendererProps<string>) {
-  return (
-    <div
-      contentEditable
-      onBlur={(e) => setValue(e.currentTarget.textContent || '')}
-      dangerouslySetInnerHTML={{ __html: value }}
-    />
-  );
-}
-
-const schema = {
-  bio: customField<string>({
-    component: 'richText',
-    label: 'Biography',
-  }),
-};
-
-function MyForm() {
-  const form = useForm(schema);
-
-  return (
-    <FormRenderer
-      form={form}
-      schema={schema}
-      renderers={{
-        custom: {
-          richText: RichTextRenderer,
-        },
-      }}
-    />
-  );
-}
-```
-
-Custom renderers receive `CustomFieldRendererProps<TValue>` which provides:
-
-| Prop       | Type                      | Description                                      |
-| ---------- | ------------------------- | ------------------------------------------------ |
-| `id`       | `string`                  | Field identifier (same as field key)             |
-| `name`     | `string`                  | Field name                                       |
-| `value`    | `TValue`                  | Current field value                              |
-| `errors`   | `string[]`                | Current validation error messages                |
-| `touched`  | `boolean`                 | Whether the field has been interacted with       |
-| `dirty`    | `boolean`                 | Whether the value differs from its initial value |
-| `setValue` | `(value: TValue) => void` | Update the field value                           |
-
-Custom fields participate in all form lifecycle features — validation, subscriptions, reset, touched/dirty tracking — automatically through the existing state engine.
-
-Multiple custom renderers can be registered side by side:
-
-```tsx
-<FormRenderer
-  form={form}
-  schema={schema}
-  renderers={{
-    custom: {
-      richText: RichTextRenderer,
-      locationPicker: LocationRenderer,
-      fileUpload: FileUploadRenderer,
-    },
-  }}
-/>
-```
-
-Built-in renderer overrides coexist alongside custom renderers:
+Replace built-in field renderers.
 
 ```tsx
 <FormRenderer
@@ -761,6 +402,49 @@ Built-in renderer overrides coexist alongside custom renderers:
   schema={schema}
   renderers={{
     text: CustomTextRenderer,
+    email: CustomEmailRenderer,
+  }}
+/>
+```
+
+Useful for:
+
+- Design systems
+- Component libraries
+- Internal UI standards
+
+---
+
+## Custom Renderers
+
+Integrate third-party components.
+
+Examples:
+
+- Rich text editors
+- Date pickers
+- Phone pickers
+- File uploads
+- Typeahead inputs
+- Location pickers
+
+Schema:
+
+```ts
+const schema = {
+  bio: customField<string>({
+    component: 'richText',
+  }),
+};
+```
+
+Renderer:
+
+```tsx
+<FormRenderer
+  form={form}
+  schema={schema}
+  renderers={{
     custom: {
       richText: RichTextRenderer,
     },
@@ -768,33 +452,43 @@ Built-in renderer overrides coexist alongside custom renderers:
 />
 ```
 
-When a `customField` specifies a `component` name that is not registered in `renderers.custom`, the label is still rendered but no input is shown. This allows graceful fallback when a renderer has not been provided.
+Custom renderers automatically participate in:
 
-### Layout
+- Validation
+- State updates
+- Dirty tracking
+- Touched tracking
+- Reset
+- Submission
 
-No layout configuration.
+---
 
-### Responsive Layout
+## Default Theme
 
-Forms include responsive layouts by default. Fields automatically arrange in a multi-column grid on desktop, reduce columns on tablet, and collapse to single-column on mobile — no configuration needed.
+MakeForm ships with a clean default theme.
 
-### Default Theme
+Import:
 
-MakeForm ships with a default theme. Import the stylesheet in your app to apply clean, modern styling:
-
-```css
-@import '@hnpsaga/makeform/dist/styles/default.css';
-```
-
-Or in JavaScript:
-
-```js
+```ts
 import '@hnpsaga/makeform/dist/styles/default.css';
 ```
 
-### Styling Overrides
+Includes:
 
-Add custom CSS class names to any rendered element without replacing renderers:
+- Responsive layout
+- Labels
+- Inputs
+- Selects
+- Textareas
+- Checkboxes
+- Radio groups
+- Error states
+
+---
+
+## Styling Overrides
+
+Customize styling without replacing renderers.
 
 ```tsx
 <FormRenderer
@@ -806,23 +500,77 @@ Add custom CSS class names to any rendered element without replacing renderers:
     field: 'my-field',
     label: 'my-label',
     input: 'my-input',
-    textarea: 'my-textarea',
-    select: 'my-select',
-    checkbox: 'my-checkbox',
-    radio: 'my-radio',
     error: 'my-error',
   }}
 />
 ```
 
-Default classes are always preserved. Custom classes are appended:
+Default styles remain active.
 
-```html
-<input class="mf-input my-input" />
+Custom classes are appended.
+
+---
+
+## Architecture
+
+MakeForm consists of five layers:
+
+```text
+Schema System
+      ↓
+Type Inference
+      ↓
+Validation Engine
+      ↓
+Form State Engine
+      ↓
+React Rendering Layer
 ```
 
-The `classNames` prop is optional and type-safe. When omitted, rendering is identical to previous behavior.
+The form engine itself is framework agnostic.
 
-Supported keys: `form`, `grid`, `field`, `label`, `input`, `textarea`, `select`, `checkbox`, `radio`, `error`.
+React integration is intentionally thin.
 
-Custom renderers own their own styling and are not affected by this API.
+---
+
+## Roadmap
+
+### Current
+
+- Schema System
+- Type Inference
+- Validation
+- Form State
+- Submission API
+- Dynamic Rendering
+- Renderer Overrides
+- Custom Renderers
+- Styling Overrides
+
+### Planned
+
+- Form-level validation
+- Async validation
+
+See GitHub issues for details.
+
+---
+
+## Contributing
+
+Issues and pull requests are welcome.
+
+Before submitting changes:
+
+```bash
+npm run lint
+npm run typecheck
+npm run test
+npm run build
+```
+
+---
+
+## License
+
+MIT
