@@ -4,37 +4,25 @@ Schema-driven TypeScript forms for React.
 
 Build forms with strong type inference, validation, state management, dynamic rendering, and extensible UI customization — all from a single schema.
 
+Most form libraries force you to choose between strong typing, dynamic form generation, and flexible UI customization. MakeForm provides all three. Define your form once and get:
+
+- Strong TypeScript inference
+- Built-in validation
+- Form state management
+- Dynamic form rendering
+- React integration
+- Renderer overrides
+- Custom field support
+- Styling overrides
+- Framework-agnostic core engine
+
 ---
 
-## Why MakeForm?
+## Live Demo
 
-Most form libraries force you to choose between:
+Try MakeForm in action:
 
-- Strong typing
-- Dynamic form generation
-- Flexible UI customization
-
-MakeForm provides all three.
-
-Define your form once and get:
-
-✅ Strong TypeScript inference
-
-✅ Built-in validation
-
-✅ Form state management
-
-✅ Dynamic form rendering
-
-✅ React integration
-
-✅ Renderer overrides
-
-✅ Custom field support
-
-✅ Styling overrides
-
-✅ Framework-agnostic core engine
+https://makeform-demo.vercel.app/
 
 ---
 
@@ -60,8 +48,6 @@ type FormValues = InferValues<typeof schema>;
 */
 ```
 
----
-
 ### Schema-Driven Forms
 
 Define your form structure in one place.
@@ -85,8 +71,6 @@ const schema = {
 };
 ```
 
----
-
 ### Dynamic Form Rendering
 
 Render complete forms directly from a schema.
@@ -94,10 +78,6 @@ Render complete forms directly from a schema.
 ```tsx
 <FormRenderer form={form} schema={schema} />
 ```
-
-No manual wiring required.
-
----
 
 ### Extensible UI
 
@@ -126,8 +106,6 @@ Or create entirely new field experiences.
   }}
 />
 ```
-
----
 
 ### Styling Overrides
 
@@ -206,15 +184,7 @@ export default function App() {
 
 ### 1. Schema Definition
 
-Schemas define:
-
-- Field types
-- Labels
-- Default values
-- Validation rules
-- Rendering metadata
-
-Example:
+Schemas define field types, labels, default values, validation rules, and rendering metadata.
 
 ```ts
 const schema = {
@@ -230,19 +200,13 @@ const schema = {
 };
 ```
 
----
-
 ### 2. Type Inference
 
-Generate form value types automatically.
+Generate form value types automatically — no manual interfaces required.
 
 ```ts
 type FormValues = InferValues<typeof schema>;
 ```
-
-No manual interfaces required.
-
----
 
 ### 3. Validation
 
@@ -278,8 +242,6 @@ phone();
 custom();
 ```
 
----
-
 ### 4. Form Submission
 
 MakeForm includes a submission helper.
@@ -292,7 +254,7 @@ const submit = form.handleSubmit((values) => {
 submit();
 ```
 
-`handleSubmit()` automatically:
+`handleSubmit()`:
 
 1. Marks all fields as touched
 2. Runs validation
@@ -301,7 +263,9 @@ submit();
 
 ---
 
-## Form State Engine
+## API Overview
+
+### Form State Engine
 
 The core engine is framework agnostic.
 
@@ -330,23 +294,19 @@ form.handleSubmit(callback);
 form.subscribe(listener);
 ```
 
----
+### React Integration
 
-## React Integration
+#### useForm
 
-### useForm
-
-Creates and manages a form instance.
+Creates and manages a form instance bound to React's rendering cycle.
 
 ```tsx
 const form = useForm(schema);
 ```
 
----
+#### useField
 
-### useField
-
-Subscribe to a single field.
+Subscribe to a single field. Only re-renders when that field changes.
 
 ```tsx
 const name = useField(form, 'name');
@@ -356,17 +316,17 @@ Returns:
 
 ```ts
 {
-  (value, errors, touched, dirty, setValue);
+  value,
+  errors,
+  touched,
+  dirty,
+  setValue,
 }
 ```
 
-Only re-renders when that field changes.
+### Dynamic Form Rendering
 
----
-
-## Dynamic Form Rendering
-
-### FormRenderer
+#### FormRenderer
 
 Automatically renders a complete form.
 
@@ -391,11 +351,9 @@ Supported field types:
 | multiSelectField |
 | customField      |
 
----
+### Renderer Overrides
 
-## Renderer Overrides
-
-Replace built-in field renderers.
+Replace built-in field renderers with your own components.
 
 ```tsx
 <FormRenderer
@@ -414,20 +372,9 @@ Useful for:
 - Component libraries
 - Internal UI standards
 
----
+### Custom Renderers
 
-## Custom Renderers
-
-Integrate third-party components.
-
-Examples:
-
-- Rich text editors
-- Date pickers
-- Phone pickers
-- File uploads
-- Typeahead inputs
-- Location pickers
+Integrate third-party components such as rich text editors, date pickers, phone pickers, file uploads, typeahead inputs, and location pickers.
 
 Schema:
 
@@ -453,18 +400,9 @@ Renderer:
 />
 ```
 
-Custom renderers automatically participate in:
+Custom renderers automatically participate in validation, state updates, dirty tracking, touched tracking, reset, and submission.
 
-- Validation
-- State updates
-- Dirty tracking
-- Touched tracking
-- Reset
-- Submission
-
----
-
-## Field Renderer Overrides
+### Field Renderer Overrides
 
 Complete field-level overrides that replace the entire field presentation — label, error, layout, and input.
 
@@ -494,7 +432,7 @@ function MuiTextRenderer({ id, field, fieldState }: FieldRendererProps<string, T
 />;
 ```
 
-### Resolution Priority
+#### Resolution Priority
 
 ```
 fieldRenderers.text
@@ -504,7 +442,7 @@ renderers.text
 builtInRenderers.text
 ```
 
-### When to Use
+#### When to Use
 
 | Extension Point  | Controls            | Use Case                  |
 | ---------------- | ------------------- | ------------------------- |
@@ -512,32 +450,17 @@ builtInRenderers.text
 | `renderers`      | Input only          | Custom input controls     |
 | Built-in         | Everything          | Default MakeForm UI       |
 
----
-
-## Default Theme
+### Default Theme
 
 MakeForm ships with a clean default theme.
-
-Import:
 
 ```ts
 import '@hnpsaga/makeform/dist/styles/default.css';
 ```
 
-Includes:
+Includes responsive layout, labels, inputs, selects, textareas, checkboxes, radio groups, and error states.
 
-- Responsive layout
-- Labels
-- Inputs
-- Selects
-- Textareas
-- Checkboxes
-- Radio groups
-- Error states
-
----
-
-## Styling Overrides
+### Styling Overrides
 
 Customize styling without replacing renderers.
 
@@ -556,17 +479,13 @@ Customize styling without replacing renderers.
 />
 ```
 
-Default styles remain active.
+Default styles remain active. Custom classes are appended.
 
-Custom classes are appended.
-
----
-
-## Architecture
+### Architecture
 
 MakeForm consists of five layers:
 
-```text
+```
 Schema System
       ↓
 Type Inference
@@ -578,36 +497,19 @@ Form State Engine
 React Rendering Layer
 ```
 
-The form engine itself is framework agnostic.
-
-React integration is intentionally thin.
+The form engine itself is framework agnostic. React integration is intentionally thin.
 
 ---
 
-## Roadmap
+## Status
 
-### Current
+Current Release: v0.1.0
 
-- Schema System
-- Type Inference
-- Validation
-- Form State
-- Submission API
-- Dynamic Rendering
-- Renderer Overrides
-- Custom Renderers
-- Styling Overrides
-
-### Planned
-
-- Form-level validation
-- Async validation
-
-See GitHub issues for details.
+This project is actively maintained and available on [npm](https://www.npmjs.com/package/@hnpsaga/makeform).
 
 ---
 
-## Demo Application
+## Development
 
 A demo application is available in `apps/demo/` demonstrating schema definition, validation, form state, submission, and dynamic rendering.
 
@@ -639,9 +541,7 @@ npm run dev
 - **Advanced** — Specialized input controls (rich text editor, rating, tag selector) via `renderers`
 - **Material UI** — Material UI integration via `fieldRenderers`
 
----
-
-## Contributing
+### Contributing
 
 Issues and pull requests are welcome.
 
