@@ -8,6 +8,7 @@ export function FormRenderer<TSchema extends Record<string, any>>({
   form,
   schema,
   renderers,
+  fieldRenderers,
   classNames,
 }: FormRendererProps<TSchema>) {
   const fieldNames = Object.keys(schema) as (keyof TSchema & string)[];
@@ -28,6 +29,7 @@ export function FormRenderer<TSchema extends Record<string, any>>({
               name={name}
               field={field}
               renderers={renderers}
+              fieldRenderers={fieldRenderers}
               classNames={classNames}
             />
           );

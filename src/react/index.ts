@@ -6,7 +6,9 @@ export { FieldRenderer } from './renderer/FieldRenderer.js';
 export type {
   ClassNames,
   FormRendererProps,
+  FieldRendererComponentProps,
   FieldRendererProps,
+  FieldRenderers,
   Renderers,
   CustomFieldRendererProps,
   PrimitiveFieldRendererProps,

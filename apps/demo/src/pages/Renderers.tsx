@@ -1,5 +1,19 @@
-import { useForm, FormRenderer, textField, selectField } from '@hnpsaga/makeform';
-import type { PrimitiveFieldRendererProps, SelectRendererProps } from '@hnpsaga/makeform';
+import {
+  useForm,
+  FormRenderer,
+  textField,
+  selectField,
+  checkboxField,
+  customField,
+  required,
+} from '@hnpsaga/makeform';
+import type {
+  PrimitiveFieldRendererProps,
+  SelectRendererProps,
+  FieldRendererProps,
+  FieldRenderers,
+} from '@hnpsaga/makeform';
+import type { TextField, SelectField } from '@hnpsaga/makeform';
 
 const textOnlySchema = {
   username: textField({
@@ -214,6 +228,159 @@ function ExampleMultiple() {
   );
 }
 
+function CustomFieldTextRenderer({
+  id,
+  name,
+  field,
+  fieldState,
+}: FieldRendererProps<string, TextField>) {
+  return (
+    <div style={{ padding: '1rem', background: '#eef2ff', borderRadius: '0.5rem' }}>
+      <label
+        htmlFor={id}
+        style={{ display: 'block', fontWeight: 600, marginBottom: '0.5rem', color: '#4338ca' }}
+      >
+        {field.label}
+      </label>
+      <input
+        id={id}
+        name={name}
+        type="text"
+        value={fieldState.value}
+        onChange={(e) => fieldState.setValue(e.target.value)}
+        style={{
+          border: '2px solid #6366f1',
+          borderRadius: '0.375rem',
+          padding: '0.5rem 0.75rem',
+          width: '100%',
+          fontSize: '1rem',
+        }}
+      />
+      {fieldState.touched && fieldState.errors.length > 0 && (
+        <div style={{ color: '#dc2626', fontSize: '0.875rem', marginTop: '0.5rem' }} role="alert">
+          {fieldState.errors[0]}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function CustomFieldSelectRenderer({
+  id,
+  name,
+  field,
+  fieldState,
+}: FieldRendererProps<string, SelectField>) {
+  return (
+    <div style={{ padding: '1rem', background: '#f0fdf4', borderRadius: '0.5rem' }}>
+      <label
+        htmlFor={id}
+        style={{ display: 'block', fontWeight: 600, marginBottom: '0.5rem', color: '#15803d' }}
+      >
+        {field.label}
+      </label>
+      <select
+        id={id}
+        name={name}
+        value={fieldState.value}
+        onChange={(e) => fieldState.setValue(e.target.value)}
+        style={{
+          border: '2px solid #22c55e',
+          borderRadius: '0.375rem',
+          padding: '0.5rem 0.75rem',
+          width: '100%',
+          fontSize: '1rem',
+          background: '#fff',
+        }}
+      >
+        <option value="">Select...</option>
+        {field.options.map((opt) => (
+          <option key={String(opt.value)} value={opt.value}>
+            {opt.label}
+          </option>
+        ))}
+      </select>
+    </div>
+  );
+}
+
+const fieldRenderersDemoSchema = {
+  product: textField({
+    label: 'Product Name',
+    validators: [required()],
+  }),
+  category: selectField({
+    label: 'Category',
+    options: [
+      { label: 'Electronics', value: 'electronics' },
+      { label: 'Clothing', value: 'clothing' },
+    ],
+  }),
+};
+
+function ExampleFieldRenderers() {
+  const form = useForm(fieldRenderersDemoSchema);
+
+  const fieldRenderers: FieldRenderers = {
+    text: CustomFieldTextRenderer,
+    select: CustomFieldSelectRenderer,
+  };
+
+  return (
+    <div>
+      <h3>Example D: Field Renderer Overrides</h3>
+      <p>
+        Complete field-level overrides using the <code>fieldRenderers</code> prop. Each field
+        renderer owns its label, input, and error rendering — MakeForm provides full field context
+        via <code>fieldState</code> and <code>field</code>.
+      </p>
+      <FormRenderer form={form} schema={fieldRenderersDemoSchema} fieldRenderers={fieldRenderers} />
+      <div style={{ marginTop: '1rem', display: 'flex', gap: '0.5rem' }}>
+        <button
+          onClick={() => {
+            form.markAllTouched();
+            form.validate();
+          }}
+          style={{
+            padding: '0.5rem 1.5rem',
+            background: '#6366f1',
+            color: '#fff',
+            border: 'none',
+            borderRadius: '0.375rem',
+            cursor: 'pointer',
+          }}
+        >
+          Validate
+        </button>
+        <button
+          onClick={() => form.reset()}
+          style={{
+            padding: '0.5rem 1.5rem',
+            background: '#6b7280',
+            color: '#fff',
+            border: 'none',
+            borderRadius: '0.375rem',
+            cursor: 'pointer',
+          }}
+        >
+          Reset
+        </button>
+      </div>
+      <div
+        style={{
+          marginTop: '1rem',
+          padding: '0.75rem',
+          background: '#f3f4f6',
+          borderRadius: '0.375rem',
+          fontSize: '0.875rem',
+        }}
+      >
+        <strong>State:</strong> <code>{JSON.stringify(form.getState().values)}</code>
+      </div>
+    </div>
+  );
+}
+
 export default function Renderers() {
   return (
     <div>
@@ -234,6 +401,10 @@ export default function Renderers() {
 
       <section style={{ marginBottom: '2.5rem' }}>
         <ExampleMultiple />
+      </section>
+
+      <section style={{ marginBottom: '2.5rem' }}>
+        <ExampleFieldRenderers />
       </section>
     </div>
   );
