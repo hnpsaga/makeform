@@ -34,11 +34,11 @@ export default function Home() {
             utility-style customization
           </li>
           <li>
-            <strong>Renderers</strong> — Renderer override examples with custom text and select
-            renderers
+            <strong>Renderers</strong> — Demonstrates <code>renderers</code> (input replacement) and{' '}
+            <code>fieldRenderers</code> (complete field replacement)
           </li>
           <li>
-            <strong>Material UI</strong> — Material UI integration via renderer overrides
+            <strong>Material UI</strong> — Material UI integration via <code>fieldRenderers</code>
           </li>
         </ul>
       </section>

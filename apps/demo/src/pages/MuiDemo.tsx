@@ -7,9 +7,11 @@ import {
   required,
 } from '@hnpsaga/makeform';
 import type {
-  PrimitiveFieldRendererProps,
-  CheckboxRendererProps,
-  SelectRendererProps,
+  FieldRendererProps,
+  FieldRenderers,
+  TextField,
+  SelectField,
+  CheckboxField,
 } from '@hnpsaga/makeform';
 import TextField from '@mui/material/TextField';
 import Select from '@mui/material/Select';
@@ -18,6 +20,7 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
+import FormHelperText from '@mui/material/FormHelperText';
 
 const schema = {
   name: textField({
@@ -39,21 +42,14 @@ const schema = {
   }),
 };
 
-function MuiTextRenderer({
-  id,
-  name,
-  value,
-  onChange,
-  className,
-}: PrimitiveFieldRendererProps<string>) {
+function MuiTextRenderer({ field, fieldState }: FieldRendererProps<string, TextField>) {
   return (
     <TextField
-      id={id}
-      name={name}
-      value={value}
-      onChange={(e) => onChange(e.target.value)}
-      className={className}
-      label={name}
+      label={field.label}
+      value={fieldState.value}
+      onChange={(e) => fieldState.setValue(e.target.value)}
+      error={fieldState.touched && fieldState.errors.length > 0}
+      helperText={fieldState.touched ? fieldState.errors[0] : undefined}
       variant="outlined"
       size="small"
       fullWidth
@@ -61,46 +57,48 @@ function MuiTextRenderer({
   );
 }
 
-function MuiSelectRenderer({ id, name, value, options, onChange, className }: SelectRendererProps) {
+function MuiSelectRenderer({ field, fieldState }: FieldRendererProps<string, SelectField>) {
   return (
-    <FormControl fullWidth size="small" className={className}>
-      <InputLabel id={`${id}-label`}>{name}</InputLabel>
+    <FormControl fullWidth size="small" error={fieldState.touched && fieldState.errors.length > 0}>
+      <InputLabel>{field.label}</InputLabel>
       <Select
-        labelId={`${id}-label`}
-        id={id}
-        name={name}
-        value={value}
-        label={name}
-        onChange={(e) => onChange(e.target.value)}
+        value={fieldState.value}
+        label={field.label}
+        onChange={(e) => fieldState.setValue(e.target.value)}
       >
-        {options.map((opt) => (
-          <MenuItem key={opt.value} value={opt.value}>
+        {field.options.map((opt) => (
+          <MenuItem key={String(opt.value)} value={opt.value}>
             {opt.label}
           </MenuItem>
         ))}
       </Select>
+      {fieldState.touched && fieldState.errors.length > 0 && (
+        <FormHelperText>{fieldState.errors[0]}</FormHelperText>
+      )}
     </FormControl>
   );
 }
 
-function MuiCheckboxRenderer({ id, name, checked, onChange, className }: CheckboxRendererProps) {
+function MuiCheckboxRenderer({ field, fieldState }: FieldRendererProps<boolean, CheckboxField>) {
   return (
-    <FormControlLabel
-      className={className}
-      control={
-        <Checkbox
-          id={id}
-          name={name}
-          checked={checked}
-          onChange={(e) => onChange(e.target.checked)}
-        />
-      }
-      label={name}
-    />
+    <FormControl error={fieldState.touched && fieldState.errors.length > 0}>
+      <FormControlLabel
+        control={
+          <Checkbox
+            checked={fieldState.value}
+            onChange={(e) => fieldState.setValue(e.target.checked)}
+          />
+        }
+        label={field.label}
+      />
+      {fieldState.touched && fieldState.errors.length > 0 && (
+        <FormHelperText>{fieldState.errors[0]}</FormHelperText>
+      )}
+    </FormControl>
   );
 }
 
-const renderers = {
+const fieldRenderers: FieldRenderers = {
   text: MuiTextRenderer,
   select: MuiSelectRenderer,
   checkbox: MuiCheckboxRenderer,
@@ -117,9 +115,10 @@ export default function MuiDemo() {
     <div>
       <h1>Material UI Integration</h1>
       <p>
-        MakeForm works with third-party UI libraries through its renderer override system. This page
-        demonstrates Material UI components (TextField, Select, Checkbox) integrated as MakeForm
-        field renderers. State management, validation, and submission are handled by MakeForm.
+        MakeForm works with third-party UI libraries through <strong>fieldRenderers</strong> —
+        complete field-level overrides that replace the entire field presentation. Material UI owns
+        the label, input, helper text, and error state. MakeForm provides the field schema and state
+        management.
       </p>
 
       <section
@@ -130,7 +129,7 @@ export default function MuiDemo() {
           borderRadius: '0.5rem',
         }}
       >
-        <FormRenderer form={form} schema={schema} renderers={renderers} />
+        <FormRenderer form={form} schema={schema} fieldRenderers={fieldRenderers} />
 
         <div style={{ marginTop: '1.5rem', display: 'flex', gap: '0.5rem' }}>
           <button

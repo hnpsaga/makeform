@@ -1,19 +1,12 @@
-import {
-  useForm,
-  FormRenderer,
-  textField,
-  selectField,
-  checkboxField,
-  customField,
-  required,
-} from '@hnpsaga/makeform';
+import { useForm, FormRenderer, textField, selectField, required } from '@hnpsaga/makeform';
 import type {
   PrimitiveFieldRendererProps,
   SelectRendererProps,
   FieldRendererProps,
   FieldRenderers,
+  TextField,
+  SelectField,
 } from '@hnpsaga/makeform';
-import type { TextField, SelectField } from '@hnpsaga/makeform';
 
 const textOnlySchema = {
   username: textField({
@@ -35,6 +28,20 @@ const multiSchema = {
       { label: 'Clothing', value: 'clothing' },
       { label: 'Books', value: 'books' },
       { label: 'Home & Garden', value: 'home' },
+    ],
+  }),
+};
+
+const fieldRenderersDemoSchema = {
+  product: textField({
+    label: 'Product Name',
+    validators: [required()],
+  }),
+  category: selectField({
+    label: 'Category',
+    options: [
+      { label: 'Electronics', value: 'electronics' },
+      { label: 'Clothing', value: 'clothing' },
     ],
   }),
 };
@@ -130,12 +137,44 @@ function StyledSelectRenderer({
   );
 }
 
+const styles = {
+  badge: {
+    display: 'inline-block',
+    padding: '0.125rem 0.5rem',
+    borderRadius: '0.25rem',
+    fontSize: '0.75rem',
+    fontWeight: 600,
+    letterSpacing: '0.025em',
+    marginLeft: '0.5rem',
+    verticalAlign: 'middle' as const,
+  },
+  badgeBuiltIn: {
+    background: '#e0e7ff',
+    color: '#4338ca',
+  },
+  badgeRenderers: {
+    background: '#fef3c7',
+    color: '#92400e',
+  },
+  badgeFieldRenderers: {
+    background: '#d1fae5',
+    color: '#065f46',
+  },
+};
+
+function Badge({ label, style }: { label: string; style: React.CSSProperties }) {
+  return <span style={{ ...styles.badge, ...style }}>{label}</span>;
+}
+
 function ExampleDefault() {
   const form = useForm(textOnlySchema);
   return (
     <div>
-      <h3>Example A: Default Text Renderer</h3>
-      <p>Built-in MakeForm text renderer with default styling.</p>
+      <h3>
+        Example A: Default MakeForm
+        <Badge label="builtInRenderers" style={styles.badgeBuiltIn} />
+      </h3>
+      <p>MakeForm renders fields using built-in renderers with default styling.</p>
       <FormRenderer form={form} schema={textOnlySchema} />
     </div>
   );
@@ -145,10 +184,14 @@ function ExampleCustom() {
   const form = useForm(textOnlySchema);
   return (
     <div>
-      <h3>Example B: Custom Text Renderer</h3>
+      <h3>
+        Example B: <code>renderers</code> — Input Replacement
+        <Badge label="renderers" style={styles.badgeRenderers} />
+      </h3>
       <p>
-        A custom text renderer with amber styling and live character count. Connected to MakeForm
-        state through the renderer override system.
+        A custom input with amber styling and live character count. MakeForm still owns the label,
+        layout, and error display. The renderer only replaces the <strong>&lt;input&gt;</strong>{' '}
+        element.
       </p>
       <FormRenderer form={form} schema={textOnlySchema} renderers={{ text: CustomTextRenderer }} />
       <div style={{ marginTop: '1rem' }}>
@@ -185,10 +228,13 @@ function ExampleMultiple() {
   const form = useForm(multiSchema);
   return (
     <div>
-      <h3>Example C: Multiple Renderer Overrides</h3>
+      <h3>
+        Example C: <code>renderers</code> — Multiple Input Overrides
+        <Badge label="renderers" style={styles.badgeRenderers} />
+      </h3>
       <p>
-        Partially overriding text and select renderers simultaneously. Other field types would use
-        their default renderers.
+        Replacing text and select inputs simultaneously. Each renderer only controls its input
+        element — label and error rendering remain with MakeForm.
       </p>
       <FormRenderer
         form={form}
@@ -228,23 +274,15 @@ function ExampleMultiple() {
   );
 }
 
-function CustomFieldTextRenderer({
-  id,
-  name,
-  field,
-  fieldState,
-}: FieldRendererProps<string, TextField>) {
+function CustomFieldTextRenderer({ field, fieldState }: FieldRendererProps<string, TextField>) {
   return (
     <div style={{ padding: '1rem', background: '#eef2ff', borderRadius: '0.5rem' }}>
       <label
-        htmlFor={id}
         style={{ display: 'block', fontWeight: 600, marginBottom: '0.5rem', color: '#4338ca' }}
       >
         {field.label}
       </label>
       <input
-        id={id}
-        name={name}
         type="text"
         value={fieldState.value}
         onChange={(e) => fieldState.setValue(e.target.value)}
@@ -265,23 +303,15 @@ function CustomFieldTextRenderer({
   );
 }
 
-function CustomFieldSelectRenderer({
-  id,
-  name,
-  field,
-  fieldState,
-}: FieldRendererProps<string, SelectField>) {
+function CustomFieldSelectRenderer({ field, fieldState }: FieldRendererProps<string, SelectField>) {
   return (
     <div style={{ padding: '1rem', background: '#f0fdf4', borderRadius: '0.5rem' }}>
       <label
-        htmlFor={id}
         style={{ display: 'block', fontWeight: 600, marginBottom: '0.5rem', color: '#15803d' }}
       >
         {field.label}
       </label>
       <select
-        id={id}
-        name={name}
         value={fieldState.value}
         onChange={(e) => fieldState.setValue(e.target.value)}
         style={{
@@ -304,20 +334,6 @@ function CustomFieldSelectRenderer({
   );
 }
 
-const fieldRenderersDemoSchema = {
-  product: textField({
-    label: 'Product Name',
-    validators: [required()],
-  }),
-  category: selectField({
-    label: 'Category',
-    options: [
-      { label: 'Electronics', value: 'electronics' },
-      { label: 'Clothing', value: 'clothing' },
-    ],
-  }),
-};
-
 function ExampleFieldRenderers() {
   const form = useForm(fieldRenderersDemoSchema);
 
@@ -328,11 +344,14 @@ function ExampleFieldRenderers() {
 
   return (
     <div>
-      <h3>Example D: Field Renderer Overrides</h3>
+      <h3>
+        Example D: <code>fieldRenderers</code> — Complete Field Replacement
+        <Badge label="fieldRenderers" style={styles.badgeFieldRenderers} />
+      </h3>
       <p>
-        Complete field-level overrides using the <code>fieldRenderers</code> prop. Each field
-        renderer owns its label, input, and error rendering — MakeForm provides full field context
-        via <code>fieldState</code> and <code>field</code>.
+        The renderer owns the entire field presentation: label, input, error state, and layout.
+        MakeForm provides the full field definition and state via <code>field</code> and{' '}
+        <code>fieldState</code> props.
       </p>
       <FormRenderer form={form} schema={fieldRenderersDemoSchema} fieldRenderers={fieldRenderers} />
       <div style={{ marginTop: '1rem', display: 'flex', gap: '0.5rem' }}>
@@ -381,14 +400,118 @@ function ExampleFieldRenderers() {
   );
 }
 
+function ArchitectureGuide() {
+  const tableStyle: React.CSSProperties = {
+    width: '100%',
+    borderCollapse: 'collapse',
+    fontSize: '0.875rem',
+  };
+
+  const thStyle: React.CSSProperties = {
+    textAlign: 'left',
+    padding: '0.5rem 0.75rem',
+    borderBottom: '2px solid #e5e7eb',
+    fontWeight: 600,
+  };
+
+  const tdStyle: React.CSSProperties = {
+    padding: '0.5rem 0.75rem',
+    borderBottom: '1px solid #e5e7eb',
+  };
+
+  return (
+    <div
+      style={{
+        marginTop: '2rem',
+        padding: '1.25rem',
+        background: '#f9fafb',
+        borderRadius: '0.5rem',
+        border: '1px solid #e5e7eb',
+      }}
+    >
+      <h3 style={{ marginTop: 0 }}>Architecture Guide</h3>
+
+      <h4>
+        When to use <code>renderers</code>
+      </h4>
+      <p style={{ fontSize: '0.875rem', lineHeight: 1.6 }}>
+        Use <strong>renderers</strong> when you only need to replace the input control. MakeForm
+        continues to handle the label, error messages, and field layout. Ideal for rich text
+        editors, date pickers, phone inputs, and specialized controls.
+      </p>
+
+      <h4>
+        When to use <code>fieldRenderers</code>
+      </h4>
+      <p style={{ fontSize: '0.875rem', lineHeight: 1.6 }}>
+        Use <strong>fieldRenderers</strong> when you need to own the entire field presentation —
+        label, errors, layout, and input. This is the right choice for design system integration
+        (Material UI, Chakra UI, Ant Design) and internal component libraries.
+      </p>
+
+      <h4>Extension Points</h4>
+      <table style={tableStyle}>
+        <thead>
+          <tr>
+            <th style={thStyle}>API</th>
+            <th style={thStyle}>Owns</th>
+            <th style={thStyle}>Use Case</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style={tdStyle}>
+              <code>fieldRenderers</code>
+            </td>
+            <td style={tdStyle}>Label, errors, layout, input</td>
+            <td style={tdStyle}>Design system integration</td>
+          </tr>
+          <tr>
+            <td style={tdStyle}>
+              <code>renderers</code>
+            </td>
+            <td style={tdStyle}>Input only</td>
+            <td style={tdStyle}>Custom input controls</td>
+          </tr>
+          <tr>
+            <td style={tdStyle}>
+              <code>builtInRenderers</code>
+            </td>
+            <td style={tdStyle}>Everything</td>
+            <td style={tdStyle}>Default MakeForm UI</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h4>Resolution Priority</h4>
+      <pre
+        style={{
+          background: '#1f2937',
+          color: '#e5e7eb',
+          padding: '0.75rem',
+          borderRadius: '0.375rem',
+          fontSize: '0.8rem',
+          overflow: 'auto',
+        }}
+      >
+        {`fieldRenderers.text  ← checked first
+        ↓
+renderers.text       ← fallback
+        ↓
+builtInRenderers.text ← default`}
+      </pre>
+    </div>
+  );
+}
+
 export default function Renderers() {
   return (
     <div>
       <h1>Renderer Overrides</h1>
       <p>
-        MakeForm lets you replace any built-in field renderer via the <code>renderers</code> prop on{' '}
-        <code>FormRenderer</code>. This is useful for integrating with design systems, component
-        libraries, or custom UI requirements.
+        MakeForm provides two extension points for customizing field rendering. Use{' '}
+        <code>renderers</code> to replace just the input element, or <code>fieldRenderers</code> to
+        take full control of the field presentation.
       </p>
 
       <section style={{ marginBottom: '2.5rem' }}>
@@ -405,6 +528,10 @@ export default function Renderers() {
 
       <section style={{ marginBottom: '2.5rem' }}>
         <ExampleFieldRenderers />
+      </section>
+
+      <section>
+        <ArchitectureGuide />
       </section>
     </div>
   );

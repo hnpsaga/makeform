@@ -635,8 +635,8 @@ npm run dev
 - **Validation** — Validation showcase with required, min, max, pattern, and custom validators
 - **Features** — Overview of MakeForm features
 - **Styling** — Styling showcase with default theme, custom classNames, and utility-style customization
-- **Renderers** — Renderer override and field renderer examples
-- **Material UI** — Material UI integration via renderer overrides
+- **Renderers** — Demonstrates `renderers` (input replacement) and `fieldRenderers` (complete field replacement)
+- **Material UI** — Material UI integration via `fieldRenderers`
 
 ---
 
