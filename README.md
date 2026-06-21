@@ -250,7 +250,7 @@ Attach validators directly to fields.
 
 ```ts
 const schema = {
-  password: textField({
+  password: passwordField({
     validators: [required(), min(8)],
   }),
 };

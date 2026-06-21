@@ -189,6 +189,7 @@ CheckboxField
 TextareaField
 EmailField
 PhoneField
+PasswordField
 DateField
 SelectField<T>
 RadioField<T>
@@ -208,10 +209,16 @@ Examples:
 
 ```ts
 textField();
+textareaField();
+emailField();
+phoneField();
+passwordField();
 numberField();
+dateField();
 checkboxField();
-selectField();
 radioField();
+selectField();
+multiSelectField();
 customField();
 ```
 
@@ -620,6 +627,7 @@ text
 textarea
 email
 phone
+password
 number
 date
 checkbox
