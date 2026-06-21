@@ -583,7 +583,6 @@ npm run dev
 - **Registration** — Registration form with text, email, password, and checkbox fields
 - **Profile** — Profile form with text, textarea, phone, date, and select fields
 - **Validation** — Validation showcase with required, min, max, pattern, and custom validators
-- **Submission** — Form submission demo with blocked invalid submissions
 - **Features** — Overview of MakeForm features
 
 ---

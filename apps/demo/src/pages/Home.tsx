@@ -27,9 +27,6 @@ export default function Home() {
             custom validators
           </li>
           <li>
-            <strong>Submission</strong> — Form submission demo with blocked invalid submissions
-          </li>
-          <li>
             <strong>Features</strong> — Overview of MakeForm features
           </li>
         </ul>

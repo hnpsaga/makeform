@@ -3,10 +3,9 @@ import Home from './pages/Home.js';
 import RegistrationForm from './pages/RegistrationForm.js';
 import ProfileForm from './pages/ProfileForm.js';
 import ValidationDemo from './pages/ValidationDemo.js';
-import SubmissionDemo from './pages/SubmissionDemo.js';
 import Features from './pages/Features.js';
 
-type Page = 'home' | 'features' | 'registration' | 'profile' | 'validation' | 'submission';
+type Page = 'home' | 'features' | 'registration' | 'profile' | 'validation';
 
 const navItems: { page: Page; label: string }[] = [
   { page: 'home', label: 'Home' },
@@ -14,7 +13,6 @@ const navItems: { page: Page; label: string }[] = [
   { page: 'registration', label: 'Registration' },
   { page: 'profile', label: 'Profile' },
   { page: 'validation', label: 'Validation' },
-  { page: 'submission', label: 'Submission' },
 ];
 
 const pages: Record<Page, () => React.ReactNode> = {
@@ -23,7 +21,6 @@ const pages: Record<Page, () => React.ReactNode> = {
   registration: () => <RegistrationForm />,
   profile: () => <ProfileForm />,
   validation: () => <ValidationDemo />,
-  submission: () => <SubmissionDemo />,
 };
 
 export default function App() {
