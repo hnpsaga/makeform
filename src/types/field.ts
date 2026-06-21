@@ -10,6 +10,7 @@ export interface BaseField<TValue> {
 
 export interface TextField extends BaseField<string> {
   readonly type: 'text';
+  readonly inputType?: string;
 }
 
 export interface NumberField extends BaseField<number> {

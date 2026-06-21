@@ -231,6 +231,28 @@ describe('FormRenderer — textField', () => {
     fireEvent.change(input, { target: { value: 'Bob' } });
     expect(input.value).toBe('Bob');
   });
+
+  it('renders with custom inputType for password', () => {
+    const schema = { password: textField({ label: 'Password', inputType: 'password' }) };
+    function Test() {
+      const form = useForm(schema);
+      return <FormRenderer form={form} schema={schema} />;
+    }
+    render(<Test />);
+    const input = screen.getByLabelText('Password') as HTMLInputElement;
+    expect(input.type).toBe('password');
+  });
+
+  it('defaults to type="text" when no inputType specified', () => {
+    const schema = { name: textField({ label: 'Name' }) };
+    function Test() {
+      const form = useForm(schema);
+      return <FormRenderer form={form} schema={schema} />;
+    }
+    render(<Test />);
+    const input = screen.getByRole('textbox') as HTMLInputElement;
+    expect(input.type).toBe('text');
+  });
 });
 
 // ─── textareaField ────────────────────────────────────────────────────────────
@@ -313,6 +335,30 @@ describe('FormRenderer — phoneField', () => {
     expect(input.value).toBe('555-0100');
     fireEvent.change(input, { target: { value: '555-9999' } });
     expect(input.value).toBe('555-9999');
+  });
+
+  it('filters non-phone characters on change', () => {
+    const schema = { phone: phoneField({ label: 'Phone' }) };
+    function Test() {
+      const form = useForm(schema);
+      return <FormRenderer form={form} schema={schema} />;
+    }
+    render(<Test />);
+    const input = screen.getByLabelText('Phone') as HTMLInputElement;
+    fireEvent.change(input, { target: { value: 'abc555-def 1234!@#' } });
+    expect(input.value).toBe('555- 1234');
+  });
+
+  it('allows valid phone characters (digits, spaces, +, -, parentheses)', () => {
+    const schema = { phone: phoneField({ label: 'Phone' }) };
+    function Test() {
+      const form = useForm(schema);
+      return <FormRenderer form={form} schema={schema} />;
+    }
+    render(<Test />);
+    const input = screen.getByLabelText('Phone') as HTMLInputElement;
+    fireEvent.change(input, { target: { value: '+1 (555) 123-4567' } });
+    expect(input.value).toBe('+1 (555) 123-4567');
   });
 });
 
@@ -439,6 +485,44 @@ describe('FormRenderer — checkboxField', () => {
     expect(checkbox.checked).toBe(true);
     fireEvent.click(checkbox);
     expect(checkbox.checked).toBe(false);
+  });
+
+  it('renders checkbox input inside the label element for inline layout', () => {
+    const schema = { subscribe: checkboxField({ label: 'Subscribe' }) };
+    function Test() {
+      const form = useForm(schema);
+      return <FormRenderer form={form} schema={schema} />;
+    }
+    const { container } = render(<Test />);
+    const label = container.querySelector('.mf-label-checkbox');
+    expect(label).not.toBeNull();
+    const checkbox = label!.querySelector('input[type="checkbox"]');
+    expect(checkbox).not.toBeNull();
+  });
+
+  it('renders label text next to checkbox input inside label', () => {
+    const schema = { subscribe: checkboxField({ label: 'Subscribe' }) };
+    function Test() {
+      const form = useForm(schema);
+      return <FormRenderer form={form} schema={schema} />;
+    }
+    render(<Test />);
+    const label = screen.getByText('Subscribe') as HTMLLabelElement;
+    expect(label.tagName.toLowerCase()).toBe('label');
+    const checkbox = label.querySelector('input[type="checkbox"]');
+    expect(checkbox).not.toBeNull();
+  });
+
+  it('renders checkbox field container with mf-field-checkbox class', () => {
+    const schema = { subscribe: checkboxField({ label: 'Subscribe' }) };
+    function Test() {
+      const form = useForm(schema);
+      return <FormRenderer form={form} schema={schema} />;
+    }
+    const { container } = render(<Test />);
+    const fieldDiv = container.querySelector('[data-field="subscribe"]');
+    expect(fieldDiv).not.toBeNull();
+    expect(fieldDiv!.className).toContain('mf-field-checkbox');
   });
 });
 

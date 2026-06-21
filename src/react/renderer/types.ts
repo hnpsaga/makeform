@@ -21,6 +21,7 @@ export interface PrimitiveFieldRendererProps<TValue> {
   value: TValue;
   onChange: (value: TValue) => void;
   className?: string;
+  inputType?: string;
 }
 
 export interface CheckboxRendererProps {

@@ -6,24 +6,24 @@ import ValidationDemo from './pages/ValidationDemo.js';
 import SubmissionDemo from './pages/SubmissionDemo.js';
 import Features from './pages/Features.js';
 
-type Page = 'home' | 'registration' | 'profile' | 'validation' | 'submission' | 'features';
+type Page = 'home' | 'features' | 'registration' | 'profile' | 'validation' | 'submission';
 
 const navItems: { page: Page; label: string }[] = [
   { page: 'home', label: 'Home' },
+  { page: 'features', label: 'Features' },
   { page: 'registration', label: 'Registration' },
   { page: 'profile', label: 'Profile' },
   { page: 'validation', label: 'Validation' },
   { page: 'submission', label: 'Submission' },
-  { page: 'features', label: 'Features' },
 ];
 
 const pages: Record<Page, () => React.ReactNode> = {
   home: () => <Home />,
+  features: () => <Features />,
   registration: () => <RegistrationForm />,
   profile: () => <ProfileForm />,
   validation: () => <ValidationDemo />,
   submission: () => <SubmissionDemo />,
-  features: () => <Features />,
 };
 
 export default function App() {

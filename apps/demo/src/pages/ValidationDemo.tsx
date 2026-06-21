@@ -68,7 +68,10 @@ export default function ValidationDemo() {
 
       <div style={{ marginTop: '1rem', display: 'flex', gap: '0.5rem' }}>
         <button
-          onClick={() => form.validate()}
+          onClick={() => {
+            form.markAllTouched();
+            form.validate();
+          }}
           style={{
             padding: '0.5rem 1.5rem',
             background: '#6366f1',

@@ -7,11 +7,12 @@ export function TextRenderer({
   value,
   onChange,
   className,
+  inputType,
 }: PrimitiveFieldRendererProps<string>) {
   return (
     <input
       className={['mf-input', className].filter(Boolean).join(' ')}
-      type="text"
+      type={inputType ?? 'text'}
       id={id}
       name={name}
       value={value}
