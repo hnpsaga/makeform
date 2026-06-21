@@ -20,3 +20,14 @@ test('preserves description', () => {
   expect(field.type).toBe('text');
   expect(field.description).toBe('Enter your name');
 });
+
+test('supports inputType for password masking', () => {
+  const field = textField({ label: 'Password', inputType: 'password' });
+  expect(field.type).toBe('text');
+  expect(field.inputType).toBe('password');
+});
+
+test('inputType defaults to undefined for regular text fields', () => {
+  const field = textField({ label: 'Name' });
+  expect(field.inputType).toBeUndefined();
+});

@@ -23,6 +23,7 @@ const schema = {
 
   password: textField({
     label: 'Password',
+    inputType: 'password',
     validators: [required(), min(8)],
   }),
 

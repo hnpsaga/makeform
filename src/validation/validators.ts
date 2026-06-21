@@ -16,6 +16,9 @@ export function required<T>(): Validator<T> {
     if (typeof value === 'string' && value.trim() === '') {
       return 'Field is required';
     }
+    if (typeof value === 'boolean' && value === false) {
+      return 'Field is required';
+    }
     return null;
   };
 }

@@ -231,7 +231,12 @@ describe('Styling overrides — class merging behavior', () => {
 
 describe('Styling overrides — renderer override compatibility', () => {
   it('works alongside a renderer override for a different field type', () => {
-    function CustomText({ value, onChange, ...rest }: PrimitiveFieldRendererProps<string>) {
+    function CustomText({
+      value,
+      onChange,
+      inputType: _inputType,
+      ...rest
+    }: PrimitiveFieldRendererProps<string>) {
       return (
         <input
           {...rest}
@@ -270,6 +275,7 @@ describe('Styling overrides — renderer override compatibility', () => {
       value,
       onChange,
       className,
+      inputType: _inputType,
       ...rest
     }: PrimitiveFieldRendererProps<string>) {
       return (

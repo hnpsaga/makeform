@@ -162,7 +162,9 @@ export function createForm<TSchema extends Record<string, any>>(
       for (const key of Object.keys(schema) as (keyof TValues & string)[]) {
         nextTouched[key] = true;
       }
-      state = createState<TValues>(state.values, state.errors, nextTouched, state.dirty);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const result = validateForm(schema as any, state.values as any);
+      state = createState<TValues>(state.values, result.errors, nextTouched, state.dirty);
       notify();
     },
     handleSubmit(callback: (values: InferValues<TSchema>) => void) {

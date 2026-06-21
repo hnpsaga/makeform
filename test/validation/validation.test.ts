@@ -63,8 +63,12 @@ describe('required()', () => {
     expect(required<number>()(0)).toBeNull();
   });
 
-  test('passes for false boolean', () => {
-    expect(required<boolean>()(false)).toBeNull();
+  test('fails for false boolean', () => {
+    expect(required<boolean>()(false)).toBe('Field is required');
+  });
+
+  test('passes for true boolean', () => {
+    expect(required<boolean>()(true)).toBeNull();
   });
 });
 
@@ -327,6 +331,24 @@ describe('validateForm()', () => {
     const failing = validateForm(schema, { agreed: false });
     expect(failing.valid).toBe(false);
     expect(failing.errors['agreed']).toContain('Must be checked');
+  });
+
+  test('required() on checkbox fails for false', () => {
+    const schema = {
+      agreed: checkboxField({ validators: [required()] }),
+    };
+    const result = validateForm(schema, { agreed: false });
+    expect(result.valid).toBe(false);
+    expect(result.errors['agreed']).toContain('Field is required');
+  });
+
+  test('required() on checkbox passes for true', () => {
+    const schema = {
+      agreed: checkboxField({ validators: [required()] }),
+    };
+    const result = validateForm(schema, { agreed: true });
+    expect(result.valid).toBe(true);
+    expect(result.errors['agreed']).toBeUndefined();
   });
 
   test('works with custom validators in schema', () => {

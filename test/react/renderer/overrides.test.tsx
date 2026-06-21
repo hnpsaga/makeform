@@ -71,7 +71,12 @@ describe('FormRenderer — renderer overrides', () => {
   });
 
   it('overrides multiple renderers simultaneously', () => {
-    function CustomText({ value, onChange, ...rest }: PrimitiveFieldRendererProps<string>) {
+    function CustomText({
+      value,
+      onChange,
+      inputType: _inputType,
+      ...rest
+    }: PrimitiveFieldRendererProps<string>) {
       return (
         <input
           {...rest}
@@ -121,7 +126,12 @@ describe('FormRenderer — renderer overrides', () => {
   });
 
   it('falls back to built-in renderers when only some are overridden', () => {
-    function CustomText({ value, onChange, ...rest }: PrimitiveFieldRendererProps<string>) {
+    function CustomText({
+      value,
+      onChange,
+      inputType: _inputType,
+      ...rest
+    }: PrimitiveFieldRendererProps<string>) {
       return (
         <input
           {...rest}
@@ -153,7 +163,12 @@ describe('FormRenderer — renderer overrides', () => {
   it('overridden renderer receives and updates form state', () => {
     let lastValue = '';
 
-    function CustomText({ value, onChange, ...rest }: PrimitiveFieldRendererProps<string>) {
+    function CustomText({
+      value,
+      onChange,
+      inputType: _inputType,
+      ...rest
+    }: PrimitiveFieldRendererProps<string>) {
       lastValue = value;
       return (
         <input {...rest} type="text" value={value} onChange={(e) => onChange(e.target.value)} />
@@ -174,7 +189,12 @@ describe('FormRenderer — renderer overrides', () => {
 
 describe('FieldRenderer — renderer overrides', () => {
   it('accepts renderers prop and uses overrides', () => {
-    function CustomText({ value, onChange, ...rest }: PrimitiveFieldRendererProps<string>) {
+    function CustomText({
+      value,
+      onChange,
+      inputType: _inputType,
+      ...rest
+    }: PrimitiveFieldRendererProps<string>) {
       return (
         <input
           {...rest}

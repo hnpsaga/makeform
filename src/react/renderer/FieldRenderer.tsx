@@ -1,7 +1,13 @@
 import React from 'react';
 import { useField } from '../useField.js';
 import type { FieldRendererProps } from './types.js';
-import type { RadioField, SelectField, MultiSelectField, CustomField } from '../../types/field.js';
+import type {
+  RadioField,
+  SelectField,
+  MultiSelectField,
+  CustomField,
+  TextField,
+} from '../../types/field.js';
 import { builtInRenderers } from './registry.js';
 
 function getLabelText(fieldLabel: string | undefined, name: string): string {
@@ -25,6 +31,7 @@ export function FieldRenderer<
   function renderInput() {
     switch (field.type) {
       case 'text': {
+        const textField = field as TextField;
         const TextRenderer = renderers?.text ?? builtInRenderers.text;
         return (
           <TextRenderer
@@ -33,6 +40,7 @@ export function FieldRenderer<
             value={fieldState.value as string}
             onChange={(v) => fieldState.setValue(v as typeof fieldState.value)}
             className={classNames?.input}
+            inputType={textField.inputType}
           />
         );
       }
@@ -174,12 +182,27 @@ export function FieldRenderer<
     }
   }
 
+  const isCheckbox = field.type === 'checkbox';
+
   return (
-    <div className={mergeClasses('mf-field', classNames?.field)} data-field={name}>
-      <label className={mergeClasses('mf-label', classNames?.label)} htmlFor={id}>
-        {labelText}
-      </label>
-      {renderInput()}
+    <div
+      className={mergeClasses('mf-field', isCheckbox ? 'mf-field-checkbox' : '', classNames?.field)}
+      data-field={name}
+    >
+      {isCheckbox ? (
+        <label
+          className={mergeClasses('mf-label', 'mf-label-checkbox', classNames?.label)}
+          htmlFor={id}
+        >
+          {renderInput()}
+          {labelText}
+        </label>
+      ) : (
+        <label className={mergeClasses('mf-label', classNames?.label)} htmlFor={id}>
+          {labelText}
+        </label>
+      )}
+      {!isCheckbox && renderInput()}
       {hasErrors && (
         <div className={mergeClasses('mf-error', classNames?.error)} role="alert">
           {fieldState.errors.map((error) => (
