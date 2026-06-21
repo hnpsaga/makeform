@@ -636,6 +636,7 @@ npm run dev
 - **Features** — Overview of MakeForm features
 - **Styling** — Styling showcase with default theme, custom classNames, and utility-style customization
 - **Renderers** — Demonstrates `renderers` (input replacement) and `fieldRenderers` (complete field replacement)
+- **Advanced** — Specialized input controls (rich text editor, rating, tag selector) via `renderers`
 - **Material UI** — Material UI integration via `fieldRenderers`
 
 ---

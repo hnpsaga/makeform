@@ -7,6 +7,7 @@ import Features from './pages/Features.js';
 import Styling from './pages/Styling.js';
 import Renderers from './pages/Renderers.js';
 import MuiDemo from './pages/MuiDemo.js';
+import AdvancedComponents from './pages/AdvancedComponents.js';
 
 type Page =
   | 'home'
@@ -16,7 +17,8 @@ type Page =
   | 'validation'
   | 'styling'
   | 'renderers'
-  | 'mui';
+  | 'mui'
+  | 'advanced';
 
 const navItems: { page: Page; label: string }[] = [
   { page: 'home', label: 'Home' },
@@ -26,6 +28,7 @@ const navItems: { page: Page; label: string }[] = [
   { page: 'validation', label: 'Validation' },
   { page: 'styling', label: 'Styling' },
   { page: 'renderers', label: 'Renderers' },
+  { page: 'advanced', label: 'Advanced' },
   { page: 'mui', label: 'Material UI' },
 ];
 
@@ -37,6 +40,7 @@ const pages: Record<Page, () => React.ReactNode> = {
   validation: () => <ValidationDemo />,
   styling: () => <Styling />,
   renderers: () => <Renderers />,
+  advanced: () => <AdvancedComponents />,
   mui: () => <MuiDemo />,
 };
 

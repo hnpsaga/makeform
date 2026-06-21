@@ -38,6 +38,10 @@ export default function Home() {
             <code>fieldRenderers</code> (complete field replacement)
           </li>
           <li>
+            <strong>Advanced</strong> — Specialized input controls (rich text editor, rating, tag
+            selector) via <code>renderers</code>
+          </li>
+          <li>
             <strong>Material UI</strong> — Material UI integration via <code>fieldRenderers</code>
           </li>
         </ul>

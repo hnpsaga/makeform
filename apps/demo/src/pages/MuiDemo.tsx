@@ -13,7 +13,7 @@ import type {
   SelectField,
   CheckboxField,
 } from '@hnpsaga/makeform';
-import TextField from '@mui/material/TextField';
+import MuiTextField from '@mui/material/TextField';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -44,7 +44,7 @@ const schema = {
 
 function MuiTextRenderer({ field, fieldState }: FieldRendererProps<string, TextField>) {
   return (
-    <TextField
+    <MuiTextField
       label={field.label}
       value={fieldState.value}
       onChange={(e) => fieldState.setValue(e.target.value)}
