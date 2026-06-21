@@ -80,6 +80,18 @@ export function FieldRenderer<
           />
         );
       }
+      case 'password': {
+        const PasswordRenderer = renderers?.password ?? builtInRenderers.password;
+        return (
+          <PasswordRenderer
+            id={id}
+            name={name}
+            value={fieldState.value as string}
+            onChange={(v) => fieldState.setValue(v as typeof fieldState.value)}
+            className={classNames?.input}
+          />
+        );
+      }
       case 'number': {
         const NumberRenderer = renderers?.number ?? builtInRenderers.number;
         return (

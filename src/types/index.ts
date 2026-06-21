@@ -9,6 +9,7 @@ export type {
   EmailField,
   DateField,
   PhoneField,
+  PasswordField,
   RadioField,
   MultiSelectField,
   CustomField,

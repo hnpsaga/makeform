@@ -6,20 +6,20 @@ MakeForm includes a default theme and two customization paths: styling overrides
 
 MakeForm ships a minimal default CSS file at `src/styles/default.css`. Every built-in field renderer applies an `mf-*` class. The theme is intentionally lightweight — simple spacing, neutral colors, and indigo accent highlights.
 
-| Class            | Element                                 |
-| ---------------- | --------------------------------------- |
-| `mf-form`        | Form wrapper                            |
-| `mf-grid`        | Responsive grid container               |
-| `mf-field`       | Individual field wrapper                |
-| `mf-label`       | Field label                             |
-| `mf-input`       | Text, email, phone, number, date inputs |
-| `mf-textarea`    | Textarea element                        |
-| `mf-select`      | Select and multi-select elements        |
-| `mf-checkbox`    | Checkbox input                          |
-| `mf-radio`       | Radio input                             |
-| `mf-radio-group` | Radio button group container            |
-| `mf-error`       | Error container                         |
-| `mf-error__text` | Individual error message                |
+| Class            | Element                                           |
+| ---------------- | ------------------------------------------------- |
+| `mf-form`        | Form wrapper                                      |
+| `mf-grid`        | Responsive grid container                         |
+| `mf-field`       | Individual field wrapper                          |
+| `mf-label`       | Field label                                       |
+| `mf-input`       | Text, email, phone, password, number, date inputs |
+| `mf-textarea`    | Textarea element                                  |
+| `mf-select`      | Select and multi-select elements                  |
+| `mf-checkbox`    | Checkbox input                                    |
+| `mf-radio`       | Radio input                                       |
+| `mf-radio-group` | Radio button group container                      |
+| `mf-error`       | Error container                                   |
+| `mf-error__text` | Individual error message                          |
 
 ## Importing Styles
 
@@ -60,18 +60,18 @@ Pass the object to `FormRenderer` or `FieldRenderer` via the `classNames` prop:
 
 ## Available Styling Hooks
 
-| Key        | Applied To                                            | Default Class |
-| ---------- | ----------------------------------------------------- | ------------- |
-| `form`     | `<div>` wrapping all fields                           | `mf-form`     |
-| `grid`     | `<div>` grid container                                | `mf-grid`     |
-| `field`    | `<div>` wrapping each field                           | `mf-field`    |
-| `label`    | `<label>` element                                     | `mf-label`    |
-| `input`    | `<input>` elements (text, email, phone, number, date) | `mf-input`    |
-| `textarea` | `<textarea>` element                                  | `mf-textarea` |
-| `select`   | `<select>` and multi-select elements                  | `mf-select`   |
-| `checkbox` | `<input type="checkbox">`                             | `mf-checkbox` |
-| `radio`    | `<input type="radio">`                                | `mf-radio`    |
-| `error`    | `<div>` containing error messages                     | `mf-error`    |
+| Key        | Applied To                                                      | Default Class |
+| ---------- | --------------------------------------------------------------- | ------------- |
+| `form`     | `<div>` wrapping all fields                                     | `mf-form`     |
+| `grid`     | `<div>` grid container                                          | `mf-grid`     |
+| `field`    | `<div>` wrapping each field                                     | `mf-field`    |
+| `label`    | `<label>` element                                               | `mf-label`    |
+| `input`    | `<input>` elements (text, email, phone, password, number, date) | `mf-input`    |
+| `textarea` | `<textarea>` element                                            | `mf-textarea` |
+| `select`   | `<select>` and multi-select elements                            | `mf-select`   |
+| `checkbox` | `<input type="checkbox">`                                       | `mf-checkbox` |
+| `radio`    | `<input type="radio">`                                          | `mf-radio`    |
+| `error`    | `<div>` containing error messages                               | `mf-error`    |
 
 ## Class Merge Behavior
 

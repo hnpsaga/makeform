@@ -10,6 +10,7 @@ import {
   textareaField,
   emailField,
   phoneField,
+  passwordField,
   numberField,
   dateField,
   checkboxField,
@@ -359,6 +360,65 @@ describe('FormRenderer — phoneField', () => {
     const input = screen.getByLabelText('Phone') as HTMLInputElement;
     fireEvent.change(input, { target: { value: '+1 (555) 123-4567' } });
     expect(input.value).toBe('+1 (555) 123-4567');
+  });
+});
+
+// ─── passwordField ────────────────────────────────────────────────────────────
+
+describe('FormRenderer — passwordField', () => {
+  it('renders as <input type="password">', () => {
+    const schema = { password: passwordField({ label: 'Password' }) };
+    function Test() {
+      const form = useForm(schema);
+      return <FormRenderer form={form} schema={schema} />;
+    }
+    render(<Test />);
+    const input = screen.getByLabelText('Password') as HTMLInputElement;
+    expect(input.type).toBe('password');
+  });
+
+  it('binds default value and handles onChange', () => {
+    const schema = { password: passwordField({ label: 'Password', defaultValue: 'secret' }) };
+    function Test() {
+      const form = useForm(schema);
+      return <FormRenderer form={form} schema={schema} />;
+    }
+    render(<Test />);
+    const input = screen.getByLabelText('Password') as HTMLInputElement;
+    expect(input.value).toBe('secret');
+    fireEvent.change(input, { target: { value: 'newsecret' } });
+    expect(input.value).toBe('newsecret');
+  });
+
+  it('participates in validation with required validator', () => {
+    const schema = { password: passwordField({ label: 'Password', validators: [required()] }) };
+    function Test() {
+      const form = useForm(schema);
+      return (
+        <div>
+          <FormRenderer form={form} schema={schema} />
+          <button data-testid="validate" onClick={() => form.validate()}>
+            Validate
+          </button>
+        </div>
+      );
+    }
+    render(<Test />);
+    fireEvent.click(screen.getByTestId('validate'));
+    expect(screen.getByRole('alert')).toBeTruthy();
+    expect(screen.getByText('Field is required')).toBeTruthy();
+  });
+
+  it('renders with mf-input class', () => {
+    const schema = { password: passwordField({ label: 'Password' }) };
+    function Test() {
+      const form = useForm(schema);
+      return <FormRenderer form={form} schema={schema} />;
+    }
+    const { container } = render(<Test />);
+    const input = container.querySelector('.mf-input');
+    expect(input).not.toBeNull();
+    expect(input!.tagName.toLowerCase()).toBe('input');
   });
 });
 

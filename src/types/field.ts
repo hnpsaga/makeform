@@ -47,6 +47,10 @@ export interface PhoneField extends BaseField<string> {
   readonly type: 'phone';
 }
 
+export interface PasswordField extends BaseField<string> {
+  readonly type: 'password';
+}
+
 export interface RadioField<TValue extends string = string> extends BaseField<TValue> {
   readonly type: 'radio';
   readonly options: readonly SelectOption<TValue>[];
@@ -71,6 +75,7 @@ export type FormField =
   | EmailField
   | DateField
   | PhoneField
+  | PasswordField
   | RadioField
   | MultiSelectField
   | CustomField<unknown>;

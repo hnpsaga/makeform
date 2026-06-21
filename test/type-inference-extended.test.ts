@@ -5,6 +5,7 @@ import type {
   EmailField,
   DateField,
   PhoneField,
+  PasswordField,
   RadioField,
   MultiSelectField,
   CustomField,
@@ -15,6 +16,7 @@ test('extended single field inference works', () => {
   expectTypeOf<InferField<EmailField>>().toEqualTypeOf<string>();
   expectTypeOf<InferField<DateField>>().toEqualTypeOf<Date>();
   expectTypeOf<InferField<PhoneField>>().toEqualTypeOf<string>();
+  expectTypeOf<InferField<PasswordField>>().toEqualTypeOf<string>();
   expectTypeOf<InferField<RadioField<'male' | 'female'>>>().toEqualTypeOf<'male' | 'female'>();
   expectTypeOf<InferField<MultiSelectField<'react'>>>().toEqualTypeOf<'react'[]>();
   expectTypeOf<InferField<CustomField<string>>>().toEqualTypeOf<string>();

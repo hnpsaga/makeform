@@ -13,6 +13,7 @@ function getDefaultValue(field: any): any {
     case 'textarea':
     case 'email':
     case 'phone':
+    case 'password':
       return '';
     case 'number':
       return 0;
@@ -162,9 +163,7 @@ export function createForm<TSchema extends Record<string, any>>(
       for (const key of Object.keys(schema) as (keyof TValues & string)[]) {
         nextTouched[key] = true;
       }
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const result = validateForm(schema as any, state.values as any);
-      state = createState<TValues>(state.values, result.errors, nextTouched, state.dirty);
+      state = createState<TValues>(state.values, state.errors, nextTouched, state.dirty);
       notify();
     },
     handleSubmit(callback: (values: InferValues<TSchema>) => void) {

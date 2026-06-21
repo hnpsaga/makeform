@@ -4,6 +4,7 @@ import {
   FormRenderer,
   textField,
   emailField,
+  passwordField,
   checkboxField,
   required,
   email,
@@ -21,9 +22,8 @@ const schema = {
     validators: [required(), email()],
   }),
 
-  password: textField({
+  password: passwordField({
     label: 'Password',
-    inputType: 'password',
     validators: [required(), min(8)],
   }),
 

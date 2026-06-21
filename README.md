@@ -250,7 +250,7 @@ Attach validators directly to fields.
 
 ```ts
 const schema = {
-  password: textField({
+  password: passwordField({
     validators: [required(), min(8)],
   }),
 };
@@ -382,6 +382,7 @@ Supported field types:
 | textareaField    |
 | emailField       |
 | phoneField       |
+| passwordField    |
 | numberField      |
 | dateField        |
 | checkboxField    |
