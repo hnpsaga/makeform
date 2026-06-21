@@ -4,12 +4,16 @@ Custom renderers let you build entirely new field types that do not exist in Mak
 
 ## When To Use
 
-| Scenario                                       | Approach                                             |
-| ---------------------------------------------- | ---------------------------------------------------- |
-| Change how a text input looks                  | Renderer override (`renderers.text`)                 |
-| Change how a date input looks                  | Renderer override (`renderers.date`)                 |
-| Add a widget that does not exist in MakeForm   | Custom renderer (`customField` + `renderers.custom`) |
-| Need a complex value type (object, File, etc.) | Custom renderer                                      |
+| Scenario                                       | Approach                                                        |
+| ---------------------------------------------- | --------------------------------------------------------------- |
+| Change how a text input looks                  | Renderer override (`renderers.text`)                            |
+| Change how a date input looks                  | Renderer override (`renderers.date`)                            |
+| Replace label, error, and layout for a field   | Field renderer override (`fieldRenderers.text`)                 |
+| Add a widget that does not exist in MakeForm   | Custom renderer (`customField` + `renderers.custom`)            |
+| Replace label, error, and layout for a widget  | Custom field renderer (`customField` + `fieldRenderers.custom`) |
+| Need a complex value type (object, File, etc.) | Custom renderer or field renderer                               |
+
+**Resolution priority:** `fieldRenderers` → `renderers` → built-in renderers.
 
 ## Architecture
 

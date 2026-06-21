@@ -1,7 +1,9 @@
 import React from 'react';
+import type { ComponentType } from 'react';
 import { useField } from '../useField.js';
-import type { FieldRendererProps } from './types.js';
+import type { FieldRendererComponentProps, FieldRendererProps } from './types.js';
 import type {
+  FormField,
   RadioField,
   SelectField,
   MultiSelectField,
@@ -18,7 +20,14 @@ export function FieldRenderer<
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   TSchema extends Record<string, any>,
   K extends keyof TSchema & string,
->({ form, name, field, renderers, classNames }: FieldRendererProps<TSchema, K>) {
+>({
+  form,
+  name,
+  field,
+  renderers,
+  fieldRenderers,
+  classNames,
+}: FieldRendererComponentProps<TSchema, K>) {
   const fieldState = useField(form, name);
   const id = name;
   const labelText = getLabelText(field.label, name);
@@ -26,6 +35,29 @@ export function FieldRenderer<
 
   function mergeClasses(...classes: (string | undefined)[]): string {
     return classes.filter(Boolean).join(' ');
+  }
+
+  function renderFieldRendererOverride() {
+    if (!fieldRenderers) return null;
+
+    if (field.type === 'custom') {
+      const customField = field as CustomField;
+      const componentName = customField.component;
+      if (!componentName || !fieldRenderers.custom) return null;
+      const OverrideRenderer = fieldRenderers.custom[componentName];
+      if (!OverrideRenderer) return null;
+      return <OverrideRenderer id={id} name={name} field={field} fieldState={fieldState} />;
+    }
+
+    const OverrideRenderer = (
+      fieldRenderers as Record<
+        string,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        ComponentType<FieldRendererProps<any, FormField>> | undefined
+      >
+    )[field.type];
+    if (!OverrideRenderer) return null;
+    return <OverrideRenderer id={id} name={name} field={field} fieldState={fieldState} />;
   }
 
   function renderInput() {
@@ -192,6 +224,11 @@ export function FieldRenderer<
       default:
         return null;
     }
+  }
+
+  const fieldRendererOverride = renderFieldRendererOverride();
+  if (fieldRendererOverride) {
+    return <>{fieldRendererOverride}</>;
   }
 
   const isCheckbox = field.type === 'checkbox';

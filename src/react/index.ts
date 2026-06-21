@@ -7,6 +7,7 @@ export type {
   ClassNames,
   FormRendererProps,
   FieldRendererProps,
+  FieldRenderers,
   Renderers,
   CustomFieldRendererProps,
   PrimitiveFieldRendererProps,

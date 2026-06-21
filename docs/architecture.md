@@ -677,6 +677,91 @@ The consumer always takes precedence.
 
 ---
 
+# Field Renderer Overrides
+
+## Purpose
+
+Field renderer overrides allow complete replacement of the entire field presentation — label, error, layout, and input — within a single component.
+
+This is useful for design system integration where the consumer needs full control over presentation.
+
+---
+
+## Resolution Priority
+
+**Built-in Fields**
+
+```text
+fieldRenderers.{type}
+        ↓
+renderers.{type}
+        ↓
+builtInRenderers.{type}
+```
+
+**Custom Fields**
+
+```text
+fieldRenderers.custom.{component}
+        ↓
+renderers.custom.{component}
+        ↓
+null
+```
+
+The highest-priority renderer that exists is used.
+
+---
+
+## Type Definitions
+
+```ts
+export interface FieldRendererProps<TValue, TField extends FormField = FormField> {
+  id: string;
+  name: string;
+  field: TField;
+  fieldState: FieldState<TValue>;
+}
+
+export type FieldRenderers = Partial<{
+  text: ComponentType<FieldRendererProps<string, TextField>>;
+  textarea: ComponentType<FieldRendererProps<string, TextareaField>>;
+  email: ComponentType<FieldRendererProps<string, EmailField>>;
+  phone: ComponentType<FieldRendererProps<string, PhoneField>>;
+  password: ComponentType<FieldRendererProps<string, PasswordField>>;
+  number: ComponentType<FieldRendererProps<number, NumberField>>;
+  date: ComponentType<FieldRendererProps<Date, DateField>>;
+  checkbox: ComponentType<FieldRendererProps<boolean, CheckboxField>>;
+  radio: ComponentType<FieldRendererProps<string, RadioField>>;
+  select: ComponentType<FieldRendererProps<string, SelectField>>;
+  'multi-select': ComponentType<FieldRendererProps<string[], MultiSelectField>>;
+  custom?: Record<string, ComponentType<FieldRendererProps<any, CustomField>>>;
+}>;
+```
+
+---
+
+## Props Extension
+
+`FormRendererProps` and `FieldRenderer` component props now accept an optional `fieldRenderers?: FieldRenderers` prop.
+
+---
+
+## Extension Point Responsibilities
+
+```text
+fieldRenderers
+    → replace entire field presentation (label, error, layout, input)
+
+renderers
+    → replace input control only
+
+built-in renderers
+    → default MakeForm behavior
+```
+
+---
+
 # Custom Renderers
 
 ## Purpose

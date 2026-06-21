@@ -464,6 +464,56 @@ Custom renderers automatically participate in:
 
 ---
 
+## Field Renderer Overrides
+
+Complete field-level overrides that replace the entire field presentation — label, error, layout, and input.
+
+```tsx
+import type { FieldRendererProps, FieldRenderers, TextField } from '@hnpsaga/makeform';
+
+function MuiTextRenderer({ id, field, fieldState }: FieldRendererProps<string, TextField>) {
+  return (
+    <TextField
+      id={id}
+      label={field.label}
+      value={fieldState.value}
+      onChange={(e) => fieldState.setValue(e.target.value)}
+      error={fieldState.touched && fieldState.errors.length > 0}
+      helperText={fieldState.touched ? fieldState.errors[0] : undefined}
+      fullWidth
+    />
+  );
+}
+
+<FormRenderer
+  form={form}
+  schema={schema}
+  fieldRenderers={{
+    text: MuiTextRenderer,
+  }}
+/>;
+```
+
+### Resolution Priority
+
+```
+fieldRenderers.text
+        ↓
+renderers.text
+        ↓
+builtInRenderers.text
+```
+
+### When to Use
+
+| Extension Point  | Controls            | Use Case                  |
+| ---------------- | ------------------- | ------------------------- |
+| `fieldRenderers` | Label, error, input | Design system integration |
+| `renderers`      | Input only          | Custom input controls     |
+| Built-in         | Everything          | Default MakeForm UI       |
+
+---
+
 ## Default Theme
 
 MakeForm ships with a clean default theme.
@@ -585,7 +635,7 @@ npm run dev
 - **Validation** — Validation showcase with required, min, max, pattern, and custom validators
 - **Features** — Overview of MakeForm features
 - **Styling** — Styling showcase with default theme, custom classNames, and utility-style customization
-- **Renderers** — Renderer override examples with custom text and select renderers
+- **Renderers** — Renderer override and field renderer examples
 - **Material UI** — Material UI integration via renderer overrides
 
 ---

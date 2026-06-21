@@ -1,6 +1,22 @@
 import type { ComponentType } from 'react';
-import type { FormField, SelectOption } from '../../types/field.js';
+import type {
+  FormField,
+  TextField,
+  TextareaField,
+  EmailField,
+  PhoneField,
+  PasswordField,
+  NumberField,
+  DateField,
+  CheckboxField,
+  RadioField,
+  SelectField,
+  MultiSelectField,
+  CustomField,
+  SelectOption,
+} from '../../types/field.js';
 import type { FormInstance } from '../../state/types.js';
+import type { FieldState } from '../types.js';
 
 export interface ClassNames {
   form?: string;
@@ -85,7 +101,32 @@ export type Renderers = Partial<{
   custom?: Record<string, ComponentType<CustomFieldRendererProps<any>>>;
 }>;
 
-export interface FieldRendererProps<
+// ─── Field Renderer Types ─────────────────────────────────────────────────────
+
+export interface FieldRendererProps<TValue, TField extends FormField = FormField> {
+  id: string;
+  name: string;
+  field: TField;
+  fieldState: FieldState<TValue>;
+}
+
+export type FieldRenderers = Partial<{
+  text: ComponentType<FieldRendererProps<string, TextField>>;
+  textarea: ComponentType<FieldRendererProps<string, TextareaField>>;
+  email: ComponentType<FieldRendererProps<string, EmailField>>;
+  phone: ComponentType<FieldRendererProps<string, PhoneField>>;
+  password: ComponentType<FieldRendererProps<string, PasswordField>>;
+  number: ComponentType<FieldRendererProps<number, NumberField>>;
+  date: ComponentType<FieldRendererProps<Date, DateField>>;
+  checkbox: ComponentType<FieldRendererProps<boolean, CheckboxField>>;
+  radio: ComponentType<FieldRendererProps<string, RadioField>>;
+  select: ComponentType<FieldRendererProps<string, SelectField>>;
+  'multi-select': ComponentType<FieldRendererProps<string[], MultiSelectField>>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  custom?: Record<string, ComponentType<FieldRendererProps<any, CustomField>>>;
+}>;
+
+export interface FieldRendererComponentProps<
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   TSchema extends Record<string, any>,
   K extends keyof TSchema & string,
@@ -94,6 +135,7 @@ export interface FieldRendererProps<
   name: K;
   field: FormField;
   renderers?: Renderers;
+  fieldRenderers?: FieldRenderers;
   classNames?: ClassNames;
 }
 
@@ -104,5 +146,6 @@ export interface FormRendererProps<
   form: FormInstance<TSchema>;
   schema: TSchema;
   renderers?: Renderers;
+  fieldRenderers?: FieldRenderers;
   classNames?: ClassNames;
 }
