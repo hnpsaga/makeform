@@ -20,9 +20,9 @@ This works well when the consumer only needs to customize the input control (Per
 
 | Persona              | Wants                                     | Supported |
 | -------------------- | ----------------------------------------- | --------- |
-| 1 — Default UI       | Everything from MakeForm                  | ✅        |
-| 2 — Design System    | Own label, error, layout, input           | ❌        |
-| 3 — Custom Component | MakeForm label/error/layout, custom input | ✅        |
+| 1 — Default UI       | Everything from MakeForm                  | ✅         |
+| 2 — Design System    | Own label, error, layout, input           | ❌         |
+| 3 — Custom Component | MakeForm label/error/layout, custom input | ✅         |
 
 Persona 2 currently has no extension point that grants control over label, error, or layout structure.
 
@@ -233,11 +233,63 @@ export interface PrimitiveFieldRendererProps<TValue> {
 
 ### 5.2 Resolution Priority
 
+**Built-in Fields**
+
+```text
+fieldRenderers.{type}
+        ↓
+renderers.{type}
+        ↓
+builtInRenderers.{type}
 ```
-fieldRenderers.{type}       ← Highest priority (complete replacement)
-renderers.{type}            ← Medium priority (input only)
-builtInRenderers.{type}     ← Lowest priority (default)
+
+Examples:
+
+```text
+fieldRenderers.text
+        ↓
+renderers.text
+        ↓
+builtInRenderers.text
 ```
+
+```text
+fieldRenderers.select
+        ↓
+renderers.select
+        ↓
+builtInRenderers.select
+```
+
+**Custom Fields**
+
+```text
+fieldRenderers.custom.richText
+        ↓
+renderers.custom.richText
+        ↓
+no renderer found
+```
+
+Examples:
+
+```tsx
+customField({
+  component: 'richText',
+})
+```
+
+Resolution:
+
+```text
+fieldRenderers.custom.richText
+        ↓
+renderers.custom.richText
+        ↓
+null
+```
+
+The highest-priority renderer that exists is used.
 
 When a `fieldRenderers` entry exists for a field type, `FieldRenderer` delegates entirely to that component. The consumer's field renderer owns the full presentation.
 
@@ -248,7 +300,7 @@ When no `fieldRenderers` entry exists, the existing `renderers` chain applies as
 **Field Renderer (complete):**
 
 ```
-FieldRendererComponent
+FieldRenderer
 ├── label (consumer-owned)
 ├── error (consumer-owned)
 ├── layout (consumer-owned)
@@ -389,6 +441,18 @@ export interface FieldRendererProps<
 
 ### 6.4 Resolution Logic (Conceptual)
 
+For custom fields, resolution follows the same pattern:
+
+```text
+fieldRenderers.custom?.[component]
+        ↓
+renderers.custom?.[component]
+        ↓
+null
+```
+
+where component is the CustomField component identifier.
+
 ```ts
 function renderField() {
   const FieldRendererOverride = fieldRenderers?.[field.type];
@@ -415,11 +479,17 @@ function renderField() {
 import {
   useForm,
   FormRenderer,
-  FieldRenderer,
   type FieldRenderers,
-  type FieldRendererComponentProps,
+  type FieldRendererProps,
 } from '@hnpsaga/makeform';
 ```
+
+Consumers only need to import:
+
+* `FieldRenderers` when defining renderer maps
+* `FieldRendererProps` when implementing complete field renderers
+
+The existing `Renderers` API remains unchanged.
 
 ---
 
@@ -449,30 +519,59 @@ function MuiTextRenderer({ id, name, field, fieldState }: FieldRendererProps<str
 ### 7.2 Chakra UI Select
 
 ```tsx
-import { Select, FormControl, FormLabel, FormErrorMessage } from '@chakra-ui/react';
-import type { FieldRendererComponentProps } from '@hnpsaga/makeform';
-import type { SelectField } from '@hnpsaga/makeform';
+import {
+  Select,
+  FormControl,
+  FormLabel,
+  FormErrorMessage,
+} from '@chakra-ui/react';
+
+import type {
+  FieldRendererProps,
+  SelectField,
+} from '@hnpsaga/makeform';
 
 function ChakraSelectRenderer({
   id,
   name,
   field,
-  value,
-  errors,
-  touched,
-  setValue,
-}: FieldRendererComponentProps<string, SelectField>) {
+  fieldState,
+}: FieldRendererProps<string, SelectField>) {
   return (
-    <FormControl isInvalid={touched && errors.length > 0}>
-      <FormLabel htmlFor={id}>{field.label}</FormLabel>
-      <Select id={id} name={name} value={value} onChange={(e) => setValue(e.target.value)}>
-        {field.options.map((opt) => (
-          <option key={opt.value} value={opt.value}>
-            {opt.label}
+    <FormControl
+      isInvalid={
+        fieldState.touched &&
+        fieldState.errors.length > 0
+      }
+    >
+      <FormLabel htmlFor={id}>
+        {field.label}
+      </FormLabel>
+
+      <Select
+        id={id}
+        name={name}
+        value={fieldState.value}
+        onChange={(e) =>
+          fieldState.setValue(e.target.value)
+        }
+      >
+        {field.options.map((option) => (
+          <option
+            key={String(option.value)}
+            value={option.value}
+          >
+            {option.label}
           </option>
         ))}
       </Select>
-      {touched && errors.map((err) => <FormErrorMessage key={err}>{err}</FormErrorMessage>)}
+
+      {fieldState.touched &&
+        fieldState.errors.map((error) => (
+          <FormErrorMessage key={error}>
+            {error}
+          </FormErrorMessage>
+        ))}
     </FormControl>
   );
 }
@@ -481,29 +580,41 @@ function ChakraSelectRenderer({
 ### 7.3 Custom Field Renderer
 
 ```tsx
-customField<string>({ component: 'richText', label: 'Bio' });
+customField<string>({
+  component: 'richText',
+  label: 'Bio',
+});
 
 function RichTextFieldRenderer({
   field,
-  value,
-  setValue,
-  errors,
-  touched,
-}: FieldRendererComponentProps<string>) {
+  fieldState,
+}: FieldRendererProps<string>) {
   return (
     <div>
       <label>{field.label}</label>
-      <RichTextEditor value={value} onChange={setValue} />
-      {touched && errors.length > 0 && <div role="alert">{errors[0]}</div>}
+
+      <RichTextEditor
+        value={fieldState.value}
+        onChange={fieldState.setValue}
+      />
+
+      {fieldState.touched &&
+        fieldState.errors.length > 0 && (
+          <div role="alert">
+            {fieldState.errors[0]}
+          </div>
+        )}
     </div>
   );
 }
 
 <FormRenderer
   fieldRenderers={{
-    custom: { richText: RichTextFieldRenderer },
+    custom: {
+      richText: RichTextFieldRenderer,
+    },
   }}
-/>;
+/>
 ```
 
 ### 7.4 Mixed Usage — Renderers + Field Renderers
@@ -545,12 +656,12 @@ When `fieldRenderers.text` is provided, it takes precedence over `renderers.text
 
 ### 8.3 Risks
 
-| Risk                                    | Impact                                          | Mitigation                                              |
-| --------------------------------------- | ----------------------------------------------- | ------------------------------------------------------- |
-| API surface increase                    | Low — single new prop                           | Well-documented boundary                                |
-| Renderer duplicate effort               | Low — field renderers replace, not duplicate    | Clear priority docs                                     |
-| Breaking custom field assumptions       | Low — custom field renderers receive same shape | Aligned with existing CustomFieldRendererProps          |
-| Accidental usage when renderers suffice | Low — documentation guides choice               | Field renderers are more code; users choose when needed |
+| Risk                                    | Impact                                                          | Mitigation                                              |
+| --------------------------------------- | --------------------------------------------------------------- | ------------------------------------------------------- |
+| API surface increase                    | Low — single new prop                                           | Well-documented boundary                                |
+| Renderer duplicate effort               | Low — field renderers replace, not duplicate                    | Clear priority docs                                     |
+| Custom field API overlap                | Low — both renderers.custom and fieldRenderers.custom can exist | Resolution priority is explicitly documented            |
+| Accidental usage when renderers suffice | Low — documentation guides choice                               | Field renderers are more code; users choose when needed |
 
 ### 8.4 Complexity Assessment
 
