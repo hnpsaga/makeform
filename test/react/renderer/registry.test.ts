@@ -10,6 +10,7 @@ describe('builtInRenderers registry', () => {
         'textarea',
         'email',
         'phone',
+        'password',
         'number',
         'date',
         'checkbox',
@@ -60,8 +61,8 @@ describe('builtInRenderers registry', () => {
     expect(typeof builtInRenderers['multi-select']).toBe('function');
   });
 
-  it('has exactly 10 entries', () => {
-    expect(Object.keys(builtInRenderers)).toHaveLength(10);
+  it('has exactly 11 entries', () => {
+    expect(Object.keys(builtInRenderers)).toHaveLength(11);
   });
 
   it('each renderer is non-null and non-undefined', () => {

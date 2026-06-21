@@ -5,6 +5,7 @@ import {
   emailField,
   dateField,
   phoneField,
+  passwordField,
   radioField,
   multiSelectField,
   customField,
@@ -21,6 +22,7 @@ describe('createForm with extended fields', () => {
       email: emailField(),
       birthday: dateField(),
       phone: phoneField(),
+      password: passwordField(),
       gender: radioField({
         options: [
           { label: 'Male', value: 'male' },
@@ -40,6 +42,7 @@ describe('createForm with extended fields', () => {
     expect(values.email).toBe('');
     expect(values.birthday.getTime()).toBe(now.getTime());
     expect(values.phone).toBe('');
+    expect(values.password).toBe('');
     expect(values.gender).toBe('male');
     expect(values.skills).toEqual([]);
     expect(values.loc).toBeUndefined();

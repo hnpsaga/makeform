@@ -382,6 +382,7 @@ Supported field types:
 | textareaField    |
 | emailField       |
 | phoneField       |
+| passwordField    |
 | numberField      |
 | dateField        |
 | checkboxField    |

@@ -1,5 +1,11 @@
 import { describe, expect, test } from 'vitest';
-import { textareaField, emailField, dateField, phoneField } from '../../src/index.js';
+import {
+  textareaField,
+  emailField,
+  dateField,
+  phoneField,
+  passwordField,
+} from '../../src/index.js';
 
 describe('extended primitive field builders', () => {
   test('textareaField sets correct type and accepts config', () => {
@@ -26,5 +32,22 @@ describe('extended primitive field builders', () => {
     const field = phoneField({ label: 'Phone' });
     expect(field.type).toBe('phone');
     expect(field.label).toBe('Phone');
+  });
+
+  test('passwordField sets correct type and accepts config', () => {
+    const field = passwordField({ label: 'Password', defaultValue: 'secret' });
+    expect(field.type).toBe('password');
+    expect(field.label).toBe('Password');
+    expect(field.defaultValue).toBe('secret');
+  });
+
+  test('passwordField works with validators', () => {
+    const field = passwordField({
+      label: 'Password',
+      validators: [() => 'error'],
+    });
+    expect(field.type).toBe('password');
+    expect(field.validators).toBeDefined();
+    expect(field.validators).toHaveLength(1);
   });
 });

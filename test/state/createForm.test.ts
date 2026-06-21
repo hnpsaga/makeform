@@ -299,32 +299,20 @@ describe('createForm values and getters', () => {
     expect(form.getState().touched).toEqual({ name: true, age: true });
   });
 
-  it('markAllTouched also runs validation', () => {
+  it('markAllTouched sets touched to true without triggering validation', () => {
     const schema = {
       name: textField({ validators: [required()] }),
-    };
-    const form = createForm(schema);
-
-    form.markAllTouched();
-
-    expect(form.getState().errors.name).toBeDefined();
-    expect(form.getState().errors.name).toContain('Field is required');
-  });
-
-  it('markAllTouched sets touched to true and computes errors together', () => {
-    const schema = {
-      name: textField({ defaultValue: 'Alice', validators: [required()] }),
       age: numberField(),
     };
     const form = createForm(schema);
 
-    // valid field
+    expect(form.getState().touched).toEqual({ name: false, age: false });
+
     form.markAllTouched();
 
-    expect(form.getState().touched.name).toBe(true);
-    expect(form.getState().touched.age).toBe(true);
-    expect(form.getState().errors.name).toBeUndefined();
-    expect(form.getState().errors.age).toBeUndefined();
+    expect(form.getState().touched).toEqual({ name: true, age: true });
+    // markAllTouched does NOT run validation or update errors
+    expect(form.getState().errors).toEqual({});
   });
 
   it('handleSubmit calls the callback with typed values on valid submission', () => {

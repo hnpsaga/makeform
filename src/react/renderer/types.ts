@@ -74,6 +74,7 @@ export type Renderers = Partial<{
   textarea: ComponentType<PrimitiveFieldRendererProps<string>>;
   email: ComponentType<PrimitiveFieldRendererProps<string>>;
   phone: ComponentType<PrimitiveFieldRendererProps<string>>;
+  password: ComponentType<PrimitiveFieldRendererProps<string>>;
   number: ComponentType<PrimitiveFieldRendererProps<number>>;
   date: ComponentType<PrimitiveFieldRendererProps<Date>>;
   checkbox: ComponentType<CheckboxRendererProps>;

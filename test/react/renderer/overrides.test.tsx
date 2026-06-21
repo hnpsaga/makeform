@@ -231,6 +231,7 @@ describe('Renderer overrides — type safety', () => {
       | 'textarea'
       | 'email'
       | 'phone'
+      | 'password'
       | 'number'
       | 'date'
       | 'checkbox'
