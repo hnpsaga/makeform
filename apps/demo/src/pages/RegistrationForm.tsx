@@ -89,7 +89,16 @@ export default function RegistrationForm() {
           }}
         >
           <h3>Submitted Values</h3>
-          <pre style={{ margin: 0 }}>{JSON.stringify(submittedValues, null, 2)}</pre>
+          <pre
+            style={{
+              margin: 0,
+              overflowX: 'auto',
+              whiteSpace: 'pre-wrap',
+              wordBreak: 'break-word',
+            }}
+          >
+            {JSON.stringify(submittedValues, null, 2)}
+          </pre>
         </div>
       )}
     </div>

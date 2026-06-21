@@ -72,7 +72,11 @@ export default function ProfileForm() {
         }}
       >
         <h3>Current Form Values</h3>
-        <pre style={{ margin: 0 }}>{JSON.stringify(state.values, null, 2)}</pre>
+        <pre
+          style={{ margin: 0, overflowX: 'auto', whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}
+        >
+          {JSON.stringify(state.values, null, 2)}
+        </pre>
       </div>
     </div>
   );

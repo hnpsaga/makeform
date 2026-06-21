@@ -52,7 +52,8 @@ export default function App() {
           background: '#1f2937',
           padding: '0.75rem 1rem',
           display: 'flex',
-          gap: '1rem',
+          gap: '0.5rem',
+          flexWrap: 'wrap',
           alignItems: 'center',
         }}
       >

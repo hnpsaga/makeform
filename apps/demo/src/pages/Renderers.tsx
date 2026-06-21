@@ -240,9 +240,11 @@ function ExampleCustom() {
           background: '#f3f4f6',
           borderRadius: '0.375rem',
           fontSize: '0.875rem',
+          overflowX: 'auto',
         }}
       >
-        <strong>State:</strong> <code>{JSON.stringify(form.getState().values)}</code>
+        <strong>State:</strong>{' '}
+        <code style={{ wordBreak: 'break-word' }}>{JSON.stringify(form.getState().values)}</code>
       </div>
     </div>
   );
@@ -309,9 +311,11 @@ function ExampleMultiple() {
           background: '#f3f4f6',
           borderRadius: '0.375rem',
           fontSize: '0.875rem',
+          overflowX: 'auto',
         }}
       >
-        <strong>State:</strong> <code>{JSON.stringify(form.getState().values)}</code>
+        <strong>State:</strong>{' '}
+        <code style={{ wordBreak: 'break-word' }}>{JSON.stringify(form.getState().values)}</code>
       </div>
     </div>
   );
@@ -443,9 +447,11 @@ function ExampleFieldRenderers() {
           background: '#f3f4f6',
           borderRadius: '0.375rem',
           fontSize: '0.875rem',
+          overflowX: 'auto',
         }}
       >
-        <strong>State:</strong> <code>{JSON.stringify(form.getState().values)}</code>
+        <strong>State:</strong>{' '}
+        <code style={{ wordBreak: 'break-word' }}>{JSON.stringify(form.getState().values)}</code>
       </div>
     </div>
   );

@@ -171,7 +171,11 @@ export default function MuiDemo() {
         }}
       >
         <h3>Current Form State</h3>
-        <pre style={{ margin: 0 }}>{JSON.stringify(form.getState(), null, 2)}</pre>
+        <pre
+          style={{ margin: 0, overflowX: 'auto', whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}
+        >
+          {JSON.stringify(form.getState(), null, 2)}
+        </pre>
       </div>
     </div>
   );
