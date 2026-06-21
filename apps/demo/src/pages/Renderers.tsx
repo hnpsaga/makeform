@@ -11,18 +11,22 @@ import type {
 const textOnlySchema = {
   username: textField({
     label: 'Username',
+    validators: [required()],
   }),
   bio: textField({
     label: 'Short Bio',
+    validators: [required()],
   }),
 };
 
 const multiSchema = {
   product: textField({
     label: 'Product Name',
+    validators: [required()],
   }),
   category: selectField({
     label: 'Category',
+    validators: [required()],
     options: [
       { label: 'Electronics', value: 'electronics' },
       { label: 'Clothing', value: 'clothing' },
@@ -39,6 +43,7 @@ const fieldRenderersDemoSchema = {
   }),
   category: selectField({
     label: 'Category',
+    validators: [required()],
     options: [
       { label: 'Electronics', value: 'electronics' },
       { label: 'Clothing', value: 'clothing' },
@@ -193,8 +198,27 @@ function ExampleCustom() {
         layout, and error display. The renderer only replaces the <strong>&lt;input&gt;</strong>{' '}
         element.
       </p>
+      <p style={{ fontSize: '0.875rem', color: '#6366f1', fontStyle: 'italic' }}>
+        Validation errors below are rendered by MakeForm.
+      </p>
       <FormRenderer form={form} schema={textOnlySchema} renderers={{ text: CustomTextRenderer }} />
-      <div style={{ marginTop: '1rem' }}>
+      <div style={{ marginTop: '1rem', display: 'flex', gap: '0.5rem' }}>
+        <button
+          onClick={() => {
+            form.markAllTouched();
+            form.validate();
+          }}
+          style={{
+            padding: '0.5rem 1.5rem',
+            background: '#6366f1',
+            color: '#fff',
+            border: 'none',
+            borderRadius: '0.375rem',
+            cursor: 'pointer',
+          }}
+        >
+          Validate
+        </button>
         <button
           onClick={() => form.reset()}
           style={{
@@ -236,6 +260,9 @@ function ExampleMultiple() {
         Replacing text and select inputs simultaneously. Each renderer only controls its input
         element — label and error rendering remain with MakeForm.
       </p>
+      <p style={{ fontSize: '0.875rem', color: '#6366f1', fontStyle: 'italic' }}>
+        Validation errors below are rendered by MakeForm.
+      </p>
       <FormRenderer
         form={form}
         schema={multiSchema}
@@ -244,7 +271,23 @@ function ExampleMultiple() {
           select: StyledSelectRenderer,
         }}
       />
-      <div style={{ marginTop: '1rem' }}>
+      <div style={{ marginTop: '1rem', display: 'flex', gap: '0.5rem' }}>
+        <button
+          onClick={() => {
+            form.markAllTouched();
+            form.validate();
+          }}
+          style={{
+            padding: '0.5rem 1.5rem',
+            background: '#6366f1',
+            color: '#fff',
+            border: 'none',
+            borderRadius: '0.375rem',
+            cursor: 'pointer',
+          }}
+        >
+          Validate
+        </button>
         <button
           onClick={() => form.reset()}
           style={{
@@ -330,6 +373,11 @@ function CustomFieldSelectRenderer({ field, fieldState }: FieldRendererProps<str
           </option>
         ))}
       </select>
+      {fieldState.touched && fieldState.errors.length > 0 && (
+        <div style={{ color: '#dc2626', fontSize: '0.875rem', marginTop: '0.5rem' }} role="alert">
+          {fieldState.errors[0]}
+        </div>
+      )}
     </div>
   );
 }
@@ -352,6 +400,9 @@ function ExampleFieldRenderers() {
         The renderer owns the entire field presentation: label, input, error state, and layout.
         MakeForm provides the full field definition and state via <code>field</code> and{' '}
         <code>fieldState</code> props.
+      </p>
+      <p style={{ fontSize: '0.875rem', color: '#065f46', fontStyle: 'italic' }}>
+        Validation errors below are rendered by the field renderer.
       </p>
       <FormRenderer form={form} schema={fieldRenderersDemoSchema} fieldRenderers={fieldRenderers} />
       <div style={{ marginTop: '1rem', display: 'flex', gap: '0.5rem' }}>
