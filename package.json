@@ -1,6 +1,6 @@
 {
   "name": "@hnpsaga/makeform",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Lightweight schema-driven form library for React with strong TypeScript type inference.",
   "repository": {
     "type": "git",
